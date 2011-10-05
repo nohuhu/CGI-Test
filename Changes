@@ -1,11 +1,17 @@
-Fri Sep 30 14:22:14 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
+Wed Oct  5 22:21:38 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
 
-. Description:
+        Version 0.2.1
+
+        I am new maintainer of this module as of today; this little
+        bump of a release deals with changes in documentation
+        following ownership changes.
+
+Fri Sep 30 14:22:14 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
 
         Version 0.2.0
 
         Forked from unauthorized 0.1.4 version, using Github as
-        repository: https://github.com/nohuhu/CGI-Test
+        repository: http://github.com/nohuhu/CGI-Test
 
         Removed all dependencies on Carp::Datum as it is long outdated
         and unsupported.

@@ -23,7 +23,7 @@ use File::Basename;
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
 
-$VERSION = '0.200';
+$VERSION = '0.2.1';
 @ISA     = qw(Exporter);
 @EXPORT  = qw(ok);
 
@@ -1124,24 +1124,23 @@ There is no support for the <ISINDEX> tag, which is deprecated.
 
 =back
 
-=head1 WEBSITE
+=head1 PUBLIC REPOSITORY
 
-You can find information about CGI::Test and other related modules at:
+CGI::Test now has a publicly accessible Git server provided by GitHub.com:
+L<http://github.com/nohuhu/CGI-Test>
 
-	http://cgi-test.sourceforge.net
+=head1 REPORTING BUGS
 
-=head1 PUBLIC CVS SERVER
-
-CGI::Test now has a publicly accessible CVS server provided by
-SourceForge (www.sourceforge.net).  You can access it by going to:
-
-	 http://sourceforge.net/cvs/?group_id=89570
+Please use CPAN RT or e-mail your bug reports, ideas, questions etc to
+module's maintainer.
 
 =head1 AUTHORS
 
-The original author is Raphael Manfredi F<E<lt>Raphael_Manfredi@pobox.comE<gt>>. 
+The original author is Raphael Manfredi.
 
-Send bug reports, hints, tips, suggestions to Steven Hilton F<E<lt>mshiltonj@mshiltonj.comE<gt>>.
+Steven Hilton was long time maintainer of this module.
+
+Current maintainer is Alexander Tokarev F<E<lt>tokarev@cpan.orgE<gt>>.
 
 =head1 SEE ALSO
 

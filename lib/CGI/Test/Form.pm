@@ -1199,28 +1199,13 @@ Submit the form, returning a C<CGI::Test::Page> reply.
 
 =back
 
-=head1 BUGS
+=head1 AUTHORS
 
-There are documentation bugs, problably, and implementation bugs, improbably.
+The original author is Raphael Manfredi.
 
-=head1 WEBSITE
+Steven Hilton was long time maintainer of this module.
 
-You can find information about CGI::Test and other related modules at:
-
-	http://cgi-test.sourceforge.net
-
-=head1 PUBLIC CVS SERVER
-
-CGI::Test now has a publicly accessible CVS server provided by 
-SourceForge <http://www.sourceforge.net>. You can access it by going to:
-
-	http://sourceforge.net/cvs/?group_id=89570
-
-=head1 AUTHOR
-
-The original author is Raphael Manfredi F<E<lt>Raphael_Manfredi@pobox.comE<gt>>. 
-
-Send bug reports, hints, tips, suggestions to Steven Hilton at <mshiltonj@mshiltonj.com>
+Current maintainer is Alexander Tokarev F<E<lt>tokarev@cpan.orgE<gt>>.
 
 =head1 SEE ALSO
 

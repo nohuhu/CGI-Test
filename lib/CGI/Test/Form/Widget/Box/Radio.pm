@@ -112,24 +112,13 @@ in L<CGI::Test::Form::Widget::Box>.
 Any attempt to C<uncheck> a radio button will be ignored, and a warning
 emitted via C<logcarp>, to help you identify the caller.
 
-=head1 WEBSITE
-
-You can find information about CGI::Test and other related modules at:
-
-   http://cgi-test.sourceforge.net
-
-=head1 PUBLIC CVS SERVER
-
-CGI::Test now has a publicly accessible CVS server provided by
-SourceForge (www.sourceforge.net).  You can access it by going to:
-
-    http://sourceforge.net/cvs/?group_id=89570
-
 =head1 AUTHORS
 
-The original author is Raphael Manfredi F<E<lt>Raphael_Manfredi@pobox.comE<gt>>. 
+The original author is Raphael Manfredi.
 
-Send bug reports, hints, tips, suggestions to Steven Hilton at <mshiltonj@mshiltonj.com>
+Steven Hilton was long time maintainer of this module.
+
+Current maintainer is Alexander Tokarev F<E<lt>tokarev@cpan.orgE<gt>>.
 
 =head1 SEE ALSO
 

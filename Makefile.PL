@@ -30,8 +30,16 @@ WriteMakefile(
         'File::Spec'        => '0',
         'Storable'          => '1.000',
     },
-    ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
-      (ABSTRACT => 'CGI regression test framework',
-       AUTHOR   => 'Raphael Manfredi <Raphael_Manfredi@pobox.com>') : ()),
+
+    ABSTRACT => 'CGI regression test framework',
+    AUTHOR   => 'Raphael Manfredi <Raphael_Manfredi@pobox.com>',
+    LICENSE  => 'perl',
+
+    META_MERGE => {
+        resources   => {
+            bugtracker  => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=CGI-Test',
+            repository  => 'http://github.com/nohuhu/CGI-Test',
+        },
+    },
 );
 
