@@ -1,3 +1,10 @@
+Sun Oct 16 23:46:11 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
+
+        Version 0.2.2
+
+        Bumping version up a notch to have CPAN indexer accept this
+        module. No other changes were made.
+
 Wed Oct  5 22:21:38 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
 
         Version 0.2.1
