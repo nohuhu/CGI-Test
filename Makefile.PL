@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.PL,v 1.2 2003/10/04 14:26:05 mshiltonj Exp $
+# $Id$
 #
 #  Copyright (c) 2001, Raphael Manfredi
 #

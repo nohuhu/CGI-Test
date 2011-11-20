@@ -43,6 +43,17 @@
 use CGI::Test;
 use Getargs::Long;
 
+use Config;
+
+#
+# This is a fix for nasty Fcntl loading problem: it seems that
+# custom-built Perl fails to allocate some kind of resources, or
+# just tries to load wrong shared object. This results in tests
+# failing miserably; considering that custom builds are very common
+# among CPAN testers, it is a serious problem.
+#
+$ENV{PATH} = $Config{bin} . ':' . $ENV{PATH};
+
 sub browse {
 	my ($method, $enctype) = getargs(@_, [qw(method enctype)]);
 

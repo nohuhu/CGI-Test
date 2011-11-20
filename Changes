@@ -1,3 +1,21 @@
+Mon Nov 21 00:17:38 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
+
+        Version 0.2.3
+
+        Made an attempt to fix a nasty bug that manifests itself
+        with custom Perl builds: test suite fails saying that it
+        can't load Fcntl shared object. I don't think this is
+        exactly *my* problem but it seems that majority of CPAN
+        testers are using customized Perl builds so FAIL to PASS
+        rate is like 2:1, which is clearly not good.
+
+        The fix is quite simple: I'm adding path to Perl executable
+        to PATH environment variable before anything else. This
+        seems to fix the problem on my machine, will see how it
+        fares with CPAN testers.
+
+        No other changes were made.
+
 Sun Oct 16 23:46:11 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
 
         Version 0.2.2
