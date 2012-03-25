@@ -1,3 +1,12 @@
+Sun Mar 25 15:49:33 PSD 2012    Alexander Tokarev <tokarev@cpan.org>
+
+        Version 0.2.4
+
+        Fixed a bug in test CGI scripts that cause them to be executed
+        with perl from $PATH rather than the one used to test the
+        module itself. This sometimes resulted in weird errors deep
+        within Carp module.
+
 Mon Nov 21 00:17:38 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
 
         Version 0.2.3

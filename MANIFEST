@@ -33,9 +33,9 @@ Makefile.PL
 MANIFEST
 README
 t/browse.pl
-t/cgi/dumpargs
-t/cgi/getform
-t/cgi/printenv
+t/cgi/dumpargs.in
+t/cgi/getform.in
+t/cgi/printenv.in
 t/env.t
 t/get.t
 t/parsing.t

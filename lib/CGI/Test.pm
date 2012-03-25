@@ -23,7 +23,7 @@ use File::Basename;
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
 
-$VERSION = '0.2.3';
+$VERSION = '0.2.4';
 @ISA     = qw(Exporter);
 @EXPORT  = qw(ok);
 

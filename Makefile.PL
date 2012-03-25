@@ -7,8 +7,31 @@
 #  as specified in the README file that comes with the distribution.
 #
 #
-
 use ExtUtils::MakeMaker;
+
+# Munge test CGI scripts so that they run under current Perl
+my @cgi_files = do {
+    my $cgi_dir = 't/cgi';
+    opendir my $dh, $cgi_dir;
+    map { "$cgi_dir/$_" } grep { !/^\.\.?/ } readdir $dh;
+};
+
+for my $file ( @cgi_files ) {
+    my $text = do {
+        open my $fin, '<', $file or die "Can't open $file for reading: $!";
+        local $/ = undef;
+        <$fin>;
+    };
+
+    $text =~ s{exec perl -S}{exec $^X -S};
+    $file =~ s{\.in}{};
+
+    open my $fout, '>', $file or die "Can't open $file for writing: $!";
+    print $fout $text;
+    close $fout;
+
+    chmod 0755, $file;
+};
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
@@ -40,6 +63,10 @@ WriteMakefile(
             bugtracker  => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=CGI-Test',
             repository  => 'http://github.com/nohuhu/CGI-Test',
         },
+    },
+
+    clean => {
+        FILES => 't/cgi/dumpargs t/cgi/getform t/cgi/printenv',
     },
 );
 

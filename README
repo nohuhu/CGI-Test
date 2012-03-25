@@ -1,5 +1,7 @@
-                           CGI::Test 0.2.3
+                           CGI::Test 0.2.4
                  Copyright (c) 2001, Raphael Manfredi
+
+        Current maintainer: Alexander Tokarev <tokarev@cpan.org>
 
 ------------------------------------------------------------------------
     This program is free software; you can redistribute it and/or modify
@@ -41,4 +43,3 @@ meaning it is ran by the HTTP server itself, and the inability to
 handle cookies.
 
 -- Raphael Manfredi <Raphael_Manfredi@pobox.com>
-
