@@ -11,14 +11,13 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
+use Carp;
+
 #
 # This class models a FORM popup menu.
 #
 
-use CGI::Test::Form::Widget::Menu;
 use base qw(CGI::Test::Form::Widget::Menu);
-
-use Log::Agent;
 
 #
 # %attr
@@ -58,7 +57,7 @@ sub set_selected
 
     unless ($state)
     {
-        logcarp "cannot unselect value \"%s\" from popup $this", $value;
+        carp "cannot unselect value \"%s\" from popup $this", $value;
         return;
     }
 
@@ -104,7 +103,7 @@ and for which there is at least one item selected, i.e. where exactly one
 item is chosen.
 
 If no item was explicitely selected, C<CGI::Test> arbitrarily chooses the
-first item in the popup (if not empty) and warns you via C<logwarn>.
+first item in the popup (if not empty) and warns you via C<warn>.
 
 =head1 INTERFACE
 

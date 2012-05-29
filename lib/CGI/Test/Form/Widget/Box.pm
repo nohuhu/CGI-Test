@@ -10,14 +10,13 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
+use Carp;
+
 #
 # This class models a FORM box, either a radio button or a checkbox.
 #
 
-use CGI::Test::Form::Widget;
 use base qw(CGI::Test::Form::Widget);
-
-use Log::Agent;
 
 ############################################################
 #
@@ -212,7 +211,7 @@ sub is_box
 ############################################################
 sub is_radio
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 ############################################################
 sub is_standalone
@@ -274,12 +273,12 @@ sub _mark_by_tag
 
     if (@boxes == 0)
     {
-        logcarp "no %s within the group '%s' bears the tag \"$tag\"",
+        carp "no %s within the group '%s' bears the tag \"$tag\"",
           $this->gui_type(), $this->name();
     }
     else
     {
-        logcarp "found %d %ss within the group '%s' bearing the tag \"$tag\"",
+        carp "found %d %ss within the group '%s' bearing the tag \"$tag\"",
           scalar(@boxes), $this->gui_type(), $this->name()
           if @boxes > 1;
 
@@ -345,7 +344,7 @@ This may be called on any box, and it will locate the box whose value
 attribute is I<tag> within the C<group_list>, and then check it.
 
 If the specified I<tag> is not found, the caller will get a warning
-via C<logcarp>.
+via C<carp>.
 
 =item C<uncheck>
 
@@ -361,7 +360,7 @@ It is not possible to do this on a radio button, as explained in C<uncheck>
 above.
 
 If the specified I<tag> is not found, the caller will get a warning
-via C<logcarp>.
+via C<carp>.
 
 =back
 

@@ -14,8 +14,6 @@ use strict;
 # and which buttons belong to some named group.
 #
 
-use Log::Agent;
-
 #
 # ->new
 #
@@ -124,7 +122,7 @@ sub _validate_radios
             # invalid operation.  We're resettting the attribute directly.
             #
 
-            logwarn
+            warn
               "found %d checked %ss for '%s', keeping first (tag \"%s\")",
               $checked, $first->gui_type, $gname, ($first->value || "");
 
@@ -136,7 +134,7 @@ sub _validate_radios
         elsif ($checked == 0)
         {
             my $first = $this->{$gname}->[ 0 ];
-            logwarn "no checked %ss for '%s', checking first (tag \"%s\")",
+            warn "no checked %ss for '%s', checking first (tag \"%s\")",
               $first->gui_type, $gname, ($first->value || "");
             $first->{is_checked} = 1;    # Direct access
         }

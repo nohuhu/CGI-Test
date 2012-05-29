@@ -11,13 +11,13 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
+use Carp;
+
 #
 # This class models a CGI form widget (button, text field, etc...).
 # It belongs to one form, identified by its `form' attribute , a ref
 # to a CGI::Test::Form object.
 #
-
-use Log::Agent;
 
 ############################################################
 #
@@ -35,7 +35,7 @@ sub new
     # Can't create a CGI::Test::Form::Widget object, only heirs.
     #
 
-    logconfess "%s is a deferred class", __PACKAGE__
+    confess "%s is a deferred class", __PACKAGE__
       if ref $this eq __PACKAGE__;
 
     $this->_common_init($form);
@@ -81,7 +81,7 @@ sub _init
 {
     my $this = shift;
     my ($node) = @_;
-    logconfess "deferred";
+    confess "deferred";
 }
 
 ############################################################
@@ -195,7 +195,7 @@ sub is_file
 
 sub gui_type
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 
 ############################################################
@@ -213,7 +213,7 @@ sub is_mutable
 
     if ($this->is_disabled)
     {
-        logcarp 'cannot change value of disabled %s "%s"', $this->gui_type,
+        carp 'cannot change value of disabled %s "%s"', $this->gui_type,
           $this->name
           if $warn;
         return 0;
@@ -221,7 +221,7 @@ sub is_mutable
 
     if ($this->is_read_only)
     {
-        logcarp 'cannot change value of read-only %s "%s"', $this->gui_type,
+        carp 'cannot change value of read-only %s "%s"', $this->gui_type,
           $this->name
           if $warn;
         return 0;
@@ -334,7 +334,7 @@ sub is_submitable
 ############################################################
 sub _is_successful
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 
 ############################################################
@@ -480,7 +480,7 @@ be marked as disabled in HTML via a suitable attribute.
 Test whether widget can change value.  Returns I<false> when
 the widget C<is_read_only> or C<is_disabled>.
 
-When the optional I<warn_flag> is true, C<logcarp> is called
+When the optional I<warn_flag> is true, C<carp> is called
 to emit a warning from the perspective of the caller.
 
 =item C<is_read_only>
@@ -574,8 +574,7 @@ CGI::Test::Form::Widget::Box(3),
 CGI::Test::Form::Widget::Button(3),
 CGI::Test::Form::Widget::Input(3),
 CGI::Test::Form::Widget::Hidden(3),
-CGI::Test::Form::Widget::Menu(3),
-Log::Agent(3).
+CGI::Test::Form::Widget::Menu(3).
 
 =cut
 

@@ -9,15 +9,15 @@ use strict;
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
+#
+
+use Carp;
 
 #
 # This class models a FORM scrollable list.
 #
 
-use CGI::Test::Form::Widget::Menu;
 use base qw(CGI::Test::Form::Widget::Menu);
-
-use Log::Agent;
 
 #
 # %attr

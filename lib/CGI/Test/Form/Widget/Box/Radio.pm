@@ -11,14 +11,13 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
+use Carp;
+
 #
 # This class models a FORM radio button.
 #
 
-use CGI::Test::Form::Widget::Box;
 use base qw(CGI::Test::Form::Widget::Box);
-
-use Log::Agent;
 
 #
 # ->set_is_checked		-- redefined
@@ -53,12 +52,12 @@ sub set_is_checked
 
 sub uncheck
 {
-    logcarp "ignoring uncheck on radio button";
+    carp "ignoring uncheck on radio button";
 }
 
 sub uncheck_tagged
 {
-    logcarp "ignoring uncheck_tagged on radio button";
+    carp "ignoring uncheck_tagged on radio button";
 }
 
 #
@@ -104,13 +103,13 @@ will by users.  All other radio buttons of the same group are automatically
 unchecked.
 
 If no radio button is checked initially, C<CGI::Test> arbitrarily chooses
-the first one listed and warns you via C<logwarn>.
+the first one listed and warns you via C<warn>.
 
 The interface is the same as the one described
 in L<CGI::Test::Form::Widget::Box>.
 
 Any attempt to C<uncheck> a radio button will be ignored, and a warning
-emitted via C<logcarp>, to help you identify the caller.
+emitted via C<carp>, to help you identify the caller.
 
 =head1 AUTHORS
 
@@ -122,8 +121,7 @@ Current maintainer is Alexander Tokarev F<E<lt>tokarev@cpan.orgE<gt>>.
 
 =head1 SEE ALSO
 
-CGI::Test::Form::Widget::Box(3), CGI::Test::Form::Widget::Box::Check(3),
-Log::Agent(3).
+CGI::Test::Form::Widget::Box(3), CGI::Test::Form::Widget::Box::Check(3).
 
 =cut
 

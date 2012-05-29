@@ -41,7 +41,6 @@
 #
 
 use CGI::Test;
-use Getargs::Long;
 
 use Config;
 
@@ -55,7 +54,10 @@ use Config;
 $ENV{PATH} = $Config{bin} . ':' . $ENV{PATH};
 
 sub browse {
-	my ($method, $enctype) = getargs(@_, [qw(method enctype)]);
+    my %params = @_;
+
+    my $method  = $params{method};
+    my $enctype = $params{enctype};
 
 	print "1..27\n";
 

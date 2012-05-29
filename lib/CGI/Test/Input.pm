@@ -17,7 +17,6 @@ use strict;
 #
 
 use Carp;
-use Log::Agent;
 
 ############################################################
 #
@@ -28,7 +27,7 @@ use Log::Agent;
 ############################################################
 sub new
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 
 ############################################################
@@ -209,12 +208,12 @@ sub add_file_now
 ############################################################
 sub mime_type
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 ############################################################
 sub _build_data
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 
 #

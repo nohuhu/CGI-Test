@@ -10,14 +10,14 @@ use strict;
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
 #
+
+use Carp;
+
 #
 # This class models a FORM button.
 #
 
-require CGI::Test::Form::Widget;
 use base qw(CGI::Test::Form::Widget);
-
-use Log::Agent;
 
 ############################################################
 #
@@ -35,7 +35,7 @@ sub new
     # Can't create a CGI::Test::Form::Widget::Button object, only heirs.
     #
 
-    logconfess "%s is a deferred class", __PACKAGE__
+    confess "%s is a deferred class", __PACKAGE__
       if ref $this eq __PACKAGE__;
 
     $this->_common_init($form);
@@ -158,7 +158,7 @@ sub press
     # Routine is redefined in heirs when processing required.
     #
 
-    logwarn 'ignoring button press: name="%s", value="%s"', $this->name(),
+    warn 'ignoring button press: name="%s", value="%s"', $this->name(),
       $this->value();
 
     return undef;
@@ -285,7 +285,7 @@ request is issued as appropriate and the reply is made available through
 a C<CGI::Test::Page> object.
 
 Otherwise, the button pressing is ignored, a warning is issued from the
-perspective of the caller, via C<logcarp>, and C<undef> is returned.
+perspective of the caller, via C<carp>, and C<undef> is returned.
 
 =back
 

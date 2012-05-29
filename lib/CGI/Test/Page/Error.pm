@@ -14,8 +14,6 @@ use strict;
 # A reply to an HTTP request resulted in an error.
 #
 
-use Getargs::Long;
-
 require CGI::Test::Page;
 use base qw(CGI::Test::Page);
 

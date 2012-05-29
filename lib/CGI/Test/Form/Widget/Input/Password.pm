@@ -9,6 +9,9 @@ use strict;
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
+#
+
+use Carp;
 
 #
 # This class models a FORM password input field.
@@ -17,10 +20,7 @@ use strict;
 # and a password field is whether characters are shown as typed or not.
 #
 
-use CGI::Test::Form::Widget::Input::Text_Field;
 use base qw(CGI::Test::Form::Widget::Input::Text_Field);
-
-use Log::Agent;
 
 #
 # Attribute access

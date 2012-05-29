@@ -2,6 +2,7 @@
 # $Id$
 #
 #  Copyright (c) 2001, Raphael Manfredi
+#  Copyright (c) 2011, 2012 Alexander Tokarev
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
@@ -41,8 +42,6 @@ WriteMakefile(
     PREREQ_PM         => {
         'CGI'               => '0',
         'Digest::MD5'       => '0',
-        'Getargs::Long'     => '0.103',
-        'Log::Agent'        => '0.207',
         'URI'               => '1.10',
         ($] >= 5.008                   # HTTP::Status is now in
          ? ('HTTP::Message' => '0', )  # HTTP::Message bundle which
@@ -60,7 +59,7 @@ WriteMakefile(
 
     META_MERGE => {
         resources   => {
-            bugtracker  => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=CGI-Test',
+            bugtracker  => 'http://github.com/nohuhu/CGI-Test/issues',
             repository  => 'http://github.com/nohuhu/CGI-Test',
         },
     },

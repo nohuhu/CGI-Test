@@ -11,6 +11,8 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
+use Carp;
+
 #
 # This class models a FORM file input for uploading.
 #
@@ -19,10 +21,7 @@ use strict;
 # the browser to select a file.
 #
 
-use CGI::Test::Form::Widget::Input::Text_Field;
 use base qw(CGI::Test::Form::Widget::Input::Text_Field);
-
-use Log::Agent;
 
 #
 # Attribute access

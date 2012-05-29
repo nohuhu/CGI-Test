@@ -11,16 +11,14 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
+use Carp;
+
 #
 # This class models a FORM menu (either a popup or a scrollable list).
 #
 
-use Carp;
-
-use CGI::Test::Form::Widget;
 use base qw(CGI::Test::Form::Widget);
 
-use Log::Agent;
 use Storable qw(dclone);
 
 ############################################################
@@ -60,7 +58,7 @@ sub _parse_options
         next if $opt->tag() eq "optgroup";
         unless ($opt->tag() eq "option")
         {
-            logwarn "ignoring non-option tag '%s' within SELECT",
+            warn "ignoring non-option tag '%s' within SELECT",
               uc($opt->tag());
             next;
         }
@@ -77,7 +75,7 @@ sub _parse_options
 
         unless (defined $value)
         {
-            logwarn "ignoring OPTION tag with no value: %s", $opt->starttag();
+            warn "ignoring OPTION tag with no value: %s", $opt->starttag();
             next;
         }
 
@@ -88,7 +86,7 @@ sub _parse_options
         # since they bear the same value...  Tough choice... Let's warn!
         #
 
-        logwarn "duplicate value '%s' in OPTION for SELECT NAME=\"%s\"",
+        warn "duplicate value '%s' in OPTION for SELECT NAME=\"%s\"",
           $value, $this->name
           if $seen{$value}++;
 
@@ -113,7 +111,7 @@ sub _parse_options
         my $first = $values->[ 0 ];
         $selected->{$first}++;
         $count++;
-        logwarn "implicitely selecting OPTION '%s' for SELECT NAME=\"%s\"",
+        warn "implicitely selecting OPTION '%s' for SELECT NAME=\"%s\"",
           $first, $this->name();
     }
 
@@ -250,7 +248,7 @@ sub is_menu
 ############################################################
 sub is_popup
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 
 ############################################################
@@ -267,7 +265,7 @@ sub is_selected
 
     unless ($this->known_values->{$value})
     {
-        logcarp "unknown value \"%s\" in $this", $value;
+        carp "unknown value \"%s\" in $this", $value;
         return 0;
     }
 
@@ -288,7 +286,7 @@ sub set_selected
 
     unless ($this->known_values->{$value})
     {
-        logcarp "unknown value \"%s\" in $this", $value;
+        carp "unknown value \"%s\" in $this", $value;
         return;
     }
 

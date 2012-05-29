@@ -1,4 +1,4 @@
-                           CGI::Test 0.2.4
+                           CGI::Test 0.3
                  Copyright (c) 2001, Raphael Manfredi
 
         Current maintainer: Alexander Tokarev <tokarev@cpan.org>
@@ -14,7 +14,7 @@
     Artistic License for more details.
 ------------------------------------------------------------------------
 
-       *** This is alpha software -- use at your own risks ***
+        *** This is beta software -- use at your own risk ***
 
 Name           DSLI  Description                                  Info
 -----------    ----  -------------------------------------------- -----

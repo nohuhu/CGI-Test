@@ -1,19 +1,19 @@
-package CGI::Test;
-use strict;
-use warnings;
 ################################################################
-# $Id: Test.pm 412 2011-09-26 13:15:02Z nohuhu@nohuhu.org $
-# $Name: cgi-test_0-104_t1 $
+# $Id$
 #################################################################
 #  Copyright (c) 2001, Raphael Manfredi
+#  Copyright (c) 2011-2012, Alexander Tokarev
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
 #
 
+package CGI::Test;
+use strict;
+use warnings;
+no  warnings 'uninitialized';
+
 use Carp;
-use Getargs::Long;
-use Log::Agent;
 use HTTP::Status;
 use URI;
 use File::Temp qw(mkstemp);
@@ -23,7 +23,7 @@ use File::Basename;
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
 
-$VERSION = '0.2.4';
+$VERSION = '0.3';
 @ISA     = qw(Exporter);
 @EXPORT  = qw(ok);
 
@@ -44,14 +44,13 @@ $VERSION = '0.2.4';
 sub new
 {
     my $this = bless {}, shift;
-    my ($ubase, $dir, $doc, $tmp, $env) =
-      xgetargs(@_,
-               -base_url => 's',
-               -cgi_dir  => 's',
-               -doc_dir  => [ 's', "/var/www" ],
-               -tmp_dir  => [ 's', $ENV{TMPDIR} || "/tmp" ],
-               -cgi_env  => [ 'HASH' ],
-               );
+    my %params = @_;
+
+    my $ubase = $params{-base_url};
+    my $dir   = $params{-cgi_dir};
+    my $doc   = $params{-doc_dir} || "/var/www";
+    my $tmp   = $params{-tmp_dir} || $ENV{TMPDIR} || "/tmp";
+    my $env   = $params{-cgi_env};
 
     my $uri = URI->new($ubase);
     croak "-base_url $ubase is not within the http scheme"
@@ -291,7 +290,7 @@ sub _cgi_request
 
     substr($upath, 0, length $base_path) = '';
 
-    logdbg 'info', "uri $uri -> script+path $upath";
+#    logdbg 'info', "uri $uri -> script+path $upath";
 
     #
     # We have script + path_info in the $upath variable.  To determine where
@@ -322,7 +321,7 @@ sub _cgi_request
     my $script_name = $base_path . join("/",        @script);        # Virtual
     my $path        = "/" . join("/",               @components);    # Virtual
 
-    logdbg 'info', "script=$script, path=$path";
+#    logdbg 'info', "script=$script, path=$path";
 
     return $error->new(RC_NOT_FOUND,    $this) unless -f $script;
     return $error->new(RC_UNAUTHORIZED, $this) unless -x $script;
@@ -338,7 +337,7 @@ sub _cgi_request
     {
         unless (pipe(PREAD, PWRITE))
         {
-            logerr "can't open pipe: $!";
+            warn "can't open pipe: $!";
             return $error->new(RC_INTERNAL_SERVER_ERROR, $this);
         }
 
@@ -362,7 +361,7 @@ sub _cgi_request
     #
 
     my $pid = fork;
-    logdie "can't fork: $!" unless defined $pid;
+    die "can't fork: $!" unless defined $pid;
 
     #
     # Child will run the CGI program with no input if it's a GET and
@@ -382,7 +381,7 @@ sub _cgi_request
             -path_info   => $path,
             @post,                           # Additional params for POST
             );
-        logconfess "not reachable!";
+        confess "not reachable!";
     }
 
     #
@@ -394,16 +393,16 @@ sub _cgi_request
     {                                        # Send POST input data
         close PREAD;
         syswrite PWRITE, $input->data, $input->length;
-        close PWRITE or logwarn "failure while closing pipe: $!";
+        close PWRITE or warn "failure while closing pipe: $!";
     }
 
     my $child = waitpid $pid, 0;
 
     if ($pid != $child)
     {
-        logerr "waitpid returned with pid=$child, but expected pid=$pid";
-        kill 'TERM', $pid or logwarn "can't SIGTERM pid $pid: $!";
-        unlink $fname or logwarn "can't unlink $fname: $!";
+        warn "waitpid returned with pid=$child, but expected pid=$pid";
+        kill 'TERM', $pid or warn "can't SIGTERM pid $pid: $!";
+        unlink $fname or warn "can't unlink $fname: $!";
         return $error->new(RC_NO_CONTENT, $this);
     }
 
@@ -414,8 +413,8 @@ sub _cgi_request
     my $header = $this->_parse_header($fname);
     unless (scalar keys %$header)
     {
-        logerr "script $script_name generated no valid headers";
-        unlink $fname or logwarn "can't unlink $fname: $!";
+        warn "script $script_name generated no valid headers";
+        unlink $fname or warn "can't unlink $fname: $!";
         return $error->new(RC_INTERNAL_SERVER_ERROR, $this);
     }
 
@@ -436,7 +435,7 @@ sub _cgi_request
     $objtype = "CGI::Test::Page::$objtype";
 
     eval "require $objtype";
-    logdie "can't load module $objtype: $@" if chop $@;
+    die "can't load module $objtype: $@" if chop $@;
 
     my $page = $objtype->new(
                         -server       => $this,
@@ -446,7 +445,7 @@ sub _cgi_request
                         -uri          => $u,
                         );
 
-    unlink $fname or logwarn "can't unlink $fname: $!";
+    unlink $fname or warn "can't unlink $fname: $!";
 
     return $page;
 }
@@ -469,17 +468,17 @@ sub _cgi_request
 sub _run_cgi
 {
     my $this = shift;
-    my ($script, $name, $user, $in, $out, $u, $path, $input) =
-      cxgetargs(@_,
-                -script_file => 's',
-                -script_name => 's',
-                -user        => [ undef ],
-                -in          => [ undef ],
-                -out         => undef,
-                -uri         => 'URI',
-                -path_info   => 's',
-                -input       => [ 'CGI::Test::Input' ],
-                );
+
+    my %params = @_;
+
+    my $script = $params{-script_file};
+    my $name   = $params{-script_name};
+    my $user   = $params{-user};
+    my $in     = $params{-in};
+    my $out    = $params{-out};
+    my $u      = $params{-uri};
+    my $path   = $params{-path_info};
+    my $input  = $params{-input};
 
     #
     # Connect file descriptors.
@@ -487,14 +486,14 @@ sub _run_cgi
 
     if (defined $in)
     {
-        open(STDIN, '<&=' . fileno($in)) || logdie "can't redirect STDIN: $!";
+        open(STDIN, '<&=' . fileno($in)) || die "can't redirect STDIN: $!";
     }
     else
     {
         my $devnull = File::Spec->devnull;
-        open(STDIN, $devnull) || logdie "can't open $devnull: $!";
+        open(STDIN, $devnull) || die "can't open $devnull: $!";
     }
-    open(STDOUT, '>&=' . fileno($out)) || logdie "can't redirect STDOUT: $!";
+    open(STDOUT, '>&=' . fileno($out)) || die "can't redirect STDOUT: $!";
 
     #
     # Setup default CGI environment.
@@ -582,10 +581,10 @@ sub _run_cgi
     my $directory = dirname($script);
     my $basename  = basename($script);
 
-    chdir $directory or logdie "can't cd to $directory: $!";
+    chdir $directory or die "can't cd to $directory: $!";
 
     {exec "./$basename"}
-    logdie "could not exec $script: $!";
+    die "could not exec $script: $!";
     return;
 }
 
@@ -605,7 +604,7 @@ sub _parse_header
     my ($file) = @_;
     my %header;
     local *FILE;
-    open(FILE, $file) || logerr "can't open $file: $!";
+    open(FILE, $file) || warn "can't open $file: $!";
     local $_;
     my $field;
 
@@ -623,14 +622,14 @@ sub _parse_header
             $field =~ s/(\w+)/\u\L$1/g;    # Normalize spelling
             if (exists $header{$field})
             {
-                logwarn "duplicate $field header in $file";
+                warn "duplicate $field header in $file";
                 $header{$field} .= " ";
             }
             $header{$field} .= $value;
         }
         else
         {
-            logwarn "mangled header in $file";
+            warn "mangled header in $file";
             %header = ();                  # Discard what we read sofar
             last;
         }

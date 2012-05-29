@@ -17,7 +17,6 @@ use strict;
 #
 
 use Carp;
-use Log::Agent;
 
 #
 # We may not create an instance of all those classes, but the cost of
@@ -475,7 +474,7 @@ sub submit
 
     if ($method eq "GET")
     {
-        logconfess "GET requests only allowed URL encoding, not %s",
+        confess "GET requests only allowed URL encoding, not %s",
           $input->mime_type
           unless $input->mime_type eq "application/x-www-form-urlencoded";
 
@@ -488,7 +487,7 @@ sub submit
     }
     else
     {
-        logconfess "unsupported method $method for FORM action";
+        confess "unsupported method $method for FORM action";
     }
 
     return $result;
@@ -594,12 +593,12 @@ sub _xtract
         }
         elsif ($tag eq "isindex")
         {
-            logwarn "ISINDEX is deprecated, ignoring %s", $node->starttag;
+            warn "ISINDEX is deprecated, ignoring %s", $node->starttag;
             next;
         }
         else
         {
-            logconfess "reached tag '$tag': invalid tree look_down()?";
+            confess "reached tag '$tag': invalid tree look_down()?";
         }
 
         #
@@ -614,14 +613,14 @@ sub _xtract
             my $type = $node->attr("type");
             unless (defined $type)
             {
-                logerr "missing TYPE indication in %s: %s", uc($tag),
+                warn "missing TYPE indication in %s: %s", uc($tag),
                   $node->starttag;
                 next;
             }
             my $info = $hlookup->{lc($type)};
             unless (defined $info)
             {
-                logerr "unknown TYPE '%s' in %s: %s", $type, uc($tag),
+                warn "unknown TYPE '%s' in %s: %s", $type, uc($tag),
                   $node->starttag;
                 next;
             }
@@ -828,7 +827,7 @@ sub _output
     }
     else
     {
-        logwarn "unknown FORM encoding type $enctype, using default"
+        warn "unknown FORM encoding type $enctype, using default"
           if $enctype ne "application/x-www-form-urlencoded";
         require CGI::Test::Input::URL;
         $input = CGI::Test::Input::URL->new();

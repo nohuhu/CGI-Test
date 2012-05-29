@@ -11,15 +11,14 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
+use Carp;
+
 #
 # This class models a FORM input field.
 # It factorizes the interface of our heirs: Text_Area and Text_Field
 #
 
-use CGI::Test::Form::Widget;
 use base qw(CGI::Test::Form::Widget);
-
-use Log::Agent;
 
 #
 # ->_is_successful		-- defined

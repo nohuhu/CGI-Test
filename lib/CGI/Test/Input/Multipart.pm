@@ -15,10 +15,9 @@ use strict;
 # POST input data to be encoded with "multipart/form-data".
 #
 
-use CGI::Test::Input;
-use base qw(CGI::Test::Input);
+use Carp;
 
-use Log::Agent;
+use base qw(CGI::Test::Input);
 
 #
 # ->new

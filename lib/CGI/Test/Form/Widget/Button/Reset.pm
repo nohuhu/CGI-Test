@@ -10,14 +10,14 @@ use strict;
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
 #
+
+use Carp;
+
 #
 # This class models a FORM reset button.
 #
 
-require CGI::Test::Form::Widget::Button;
 use base qw(CGI::Test::Form::Widget::Button);
-
-use Log::Agent;
 
 #
 # Attribute access

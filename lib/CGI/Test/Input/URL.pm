@@ -14,10 +14,9 @@ use strict;
 # POST input data to be encoded with "application/x-www-form-urlencoded".
 #
 
-require CGI::Test::Input;
-use base qw(CGI::Test::Input);
+use Carp;
 
-use Log::Agent;
+use base qw(CGI::Test::Input);
 
 #
 # ->new

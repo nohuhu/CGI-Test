@@ -10,8 +10,6 @@ use strict;
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
 
-use Getargs::Long;
-
 require CGI::Test::Page::Real;
 use base qw(CGI::Test::Page::Real);
 

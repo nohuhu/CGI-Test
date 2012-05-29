@@ -15,10 +15,7 @@ use strict;
 # This class models a FORM checkbox button.
 #
 
-use CGI::Test::Form::Widget::Box;
 use base qw(CGI::Test::Form::Widget::Box);
-
-use Log::Agent;
 
 #
 # Attribute access
@@ -49,11 +46,9 @@ CGI::Test::Form::Widget::Box::Check - A checkbox widget
  # Inherits from CGI::Test::Form::Widget::Box
  # $form is a CGI::Test::Form
 
- use Log::Agent;    # logdie below
-
  my ($agree, $ads) = $form->checkbox_by_name(qw(i_agree ads));
 
- logdie "expected a standalone checkbox" unless $agree->is_standalone;
+ die "expected a standalone checkbox" unless $agree->is_standalone;
  $agree->check;
  $ads->uncheck_tagged("spam OK");
 

@@ -16,10 +16,8 @@ use strict;
 # depending on the Content-Type.
 #
 
-use Getargs::Long;
-use Log::Agent;
+use Carp;
 
-require CGI::Test::Page;
 use base qw(CGI::Test::Page);
 
 #
@@ -29,7 +27,7 @@ use base qw(CGI::Test::Page);
 #
 sub new
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 
 #
@@ -62,19 +60,17 @@ sub raw_content_ref
 sub _init
 {
     my $this = shift;
-    my ($server, $file, $ctype, $user, $uri) = cxgetargs(
-        @_, {-strict => 0, -extra => 0},
-        -server       => 'CGI::Test',    # XXX may be extended one day
-        -file         => 's',
-        -content_type => 's',
-        -user         => undef,
-        -uri          => 'URI',
-        );
-    $this->{server}       = $server;
-    $this->{content_type} = $ctype;
-    $this->{user}         = $user;
-    $this->{uri}          = $uri;
+
+    my %params = @_;
+
+    my $file              = $params{-file};
+    $this->{server}       = $params{-server};
+    $this->{content_type} = $params{-content_type};
+    $this->{user}         = $params{-user};
+    $this->{uri}          = $params{-uri};
+
     $this->_read_raw_content($file);
+
     return;
 }
 
@@ -92,7 +88,7 @@ sub _read_raw_content
     my ($file) = @_;
 
     local *FILE;
-    open(FILE, $file) || logdie "can't open $file: $!";
+    open(FILE, $file) || die "can't open $file: $!";
     my $size = -s FILE;
 
     $this->{raw_content} = ' ' x -s (FILE);    # Pre-extend buffer

@@ -1,3 +1,15 @@
+Mon May 28 18:37:24 PSD 2012    Alexander Tokarev <tokarev@cpan.org>
+
+        Version 0.3
+
+        Completely removed all traces of dependency on Log::Agent and
+        Getargs::Long. Both are long obsolete, hardly maintained
+        anymore and at least one of these (Log::Agent) is failing its
+        tests.
+
+        Changed bugtracker attribute in Makefile.PL to point to
+        Git tracker.
+
 Sun Mar 25 15:49:33 PSD 2012    Alexander Tokarev <tokarev@cpan.org>
 
         Version 0.2.4

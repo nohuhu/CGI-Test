@@ -11,15 +11,14 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
+use Carp;
+
 #
 # This class models a FORM image button.
 # It's really a submit button in disguise as far as processing goes.
 #
 
-use CGI::Test::Form::Widget::Button::Submit;
 use base qw(CGI::Test::Form::Widget::Button::Submit);
-
-use Log::Agent;
 
 #
 # Attribute access

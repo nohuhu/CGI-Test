@@ -16,8 +16,8 @@ use strict;
 # The page can be an error, or a real page, each with its own class hierarchy.
 #
 
-use Getargs::Long;
-use Log::Agent;
+use Carp;
+
 ######################################################################
 #
 # ->new
@@ -27,7 +27,7 @@ use Log::Agent;
 ######################################################################
 sub new
 {
-    logconfess "deferred";
+    confess "deferred";
 }
 
 #

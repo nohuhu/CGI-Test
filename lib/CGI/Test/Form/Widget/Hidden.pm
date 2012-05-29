@@ -9,15 +9,15 @@ use strict;
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
+#
+
+use Carp;
 
 #
 # This class models a FORM hidden field.
 #
 
-require CGI::Test::Form::Widget;
 use base qw(CGI::Test::Form::Widget);
-
-use Log::Agent;
 
 #
 # %attr

@@ -10,14 +10,14 @@ use strict;
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
 #
+
+use Carp;
+
 #
 # This class models a FORM text field.
 #
 
-use CGI::Test::Form::Widget::Input;
 use base qw(CGI::Test::Form::Widget::Input);
-
-use Log::Agent;
 
 #
 # %attr
@@ -96,7 +96,7 @@ sub set_value
 
     if (defined $maxlen && length($value) > $maxlen)
     {
-        logcarp "truncating text to %d byte%s for %s '%s'", $maxlen,
+        carp "truncating text to %d byte%s for %s '%s'", $maxlen,
           $maxlen == 1 ? "" : "s", $this->gui_type, $this->name;
         substr($value, $maxlen) = '';
     }

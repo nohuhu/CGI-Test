@@ -11,8 +11,6 @@ use strict;
 #  as specified in the README file that comes with the distribution.
 #
 
-use Getargs::Long;
-
 require CGI::Test::Page::Real;
 use base qw(CGI::Test::Page::Real);
 
