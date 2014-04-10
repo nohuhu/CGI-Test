@@ -34,6 +34,12 @@ sub new
 # Common attribute access
 #
 
+sub raw_content {
+    my ($self) = @_;
+
+    return $self->{raw_content};
+}
+
 ######################################################################
 sub content_type
 {

@@ -1,14 +1,13 @@
-################################################################
-# $Id$
 #################################################################
 #  Copyright (c) 2001, Raphael Manfredi
-#  Copyright (c) 2011-2012, Alexander Tokarev
+#  Copyright (c) 2011-2014, Alex Tokarev
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
 #
 
 package CGI::Test;
+
 use strict;
 use warnings;
 no  warnings 'uninitialized';
@@ -19,11 +18,13 @@ use URI;
 use File::Temp qw(mkstemp);
 use File::Spec;
 use File::Basename;
+use Cwd qw(abs_path);
+
 
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
 
-$VERSION = '0.3';
+$VERSION = '0.31';
 @ISA     = qw(Exporter);
 @EXPORT  = qw(ok);
 
@@ -58,6 +59,9 @@ sub new
 
     my ($server, $path) = $this->split_uri($uri);
     $this->{host_port} = $server;
+    $this->{scheme}    = $uri->scheme;
+    $this->{host}      = $uri->host;
+    $this->{port}      = $uri->port;
     $this->{base_path} = $path;
     $this->{cgi_dir}   = $dir;
     $this->{tmp_dir}   = $tmp;
@@ -105,7 +109,7 @@ sub new
 #
 ######################################################################
 sub make
-{    #
+{
     my $class = shift;
     return $class->new(@_);
 }
@@ -119,6 +123,33 @@ sub host_port
 {
     my $this = shift;
     return $this->{host_port};
+}
+
+######################################################################
+sub base_uri
+{
+    my $this = shift;
+
+    my $scheme = $this->{scheme};
+    my $host   = $this->{host};
+    my $port   = $this->{port};
+    my $base   = $this->{base_path};
+
+    return $scheme . '://' . $host . ':' . $port . $base;
+}
+
+######################################################################
+sub host
+{
+    my $this = shift;
+    return $this->{host};
+}
+
+######################################################################
+sub port
+{
+    my $this = shift;
+    return $this->{port};
 }
 
 ######################################################################
@@ -417,6 +448,14 @@ sub _cgi_request
         unlink $fname or warn "can't unlink $fname: $!";
         return $error->new(RC_INTERNAL_SERVER_ERROR, $this);
     }
+    
+    #
+    # Return error page if we got 5xx status
+    #
+    
+    if ( my ($status) = $header->{Status} =~ /^(5\d\d)/ ) {
+        return $error->new($status, $this);
+    }
 
     #
     # Store headers for later retrieval
@@ -558,6 +597,13 @@ sub _run_cgi
     {
         delete $ENV{QUERY_STRING};
     }
+    
+    #
+    # This is a way of letting Perl test scripts to run under
+    # the same Perl version that CGI::Test is running with
+    #
+
+    $ENV{PERL} = $^X;
 
     #
     # Make sure the script sees the same @INC as we do currently.
@@ -568,8 +614,6 @@ sub _run_cgi
     # Since we're about to chdir() to the cgi-bin directory, we must anchor
     # any relative path to the current working directory.
     #
-
-    use Cwd qw(abs_path);
 
     $ENV{PERL5LIB} = join(':', map {-e $_ ? abs_path($_) : $_} @INC);
 

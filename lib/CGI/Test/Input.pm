@@ -1,8 +1,3 @@
-package CGI::Test::Input;
-use strict;
-####################################################################
-# $Id: Input.pm 411 2011-09-26 11:19:30Z nohuhu@nohuhu.org $
-# $Name: cgi-test_0-104_t1 $
 #####################################################################
 #
 #  Copyright (c) 2001, Raphael Manfredi
@@ -15,6 +10,12 @@ use strict;
 # Abstract representation of the POST input data, which is a list of incoming
 # parameters that can be encoded differently.
 #
+
+package CGI::Test::Input;
+
+use strict;
+use warnings;
+no  warnings 'uninitialized';
 
 use Carp;
 
@@ -83,6 +84,23 @@ sub data
     my $this = shift;
     $this->_refresh() if $this->_stale();
     $this->{data};
+}
+
+############################################################
+#
+# ->set_raw_data
+#
+# Set raw POST data for this input object
+#
+############################################################
+sub set_raw_data {
+    my ($this, $data) = @_;
+
+    $this->{data}   = $data;
+    $this->{length} = do { use bytes; CORE::length $data };
+    $this->{stale}  = 0;
+
+    return $this;
 }
 
 ############################################################
@@ -201,6 +219,14 @@ sub add_file_now
     return;
 }
 
+sub set_mime_type {
+    my ($this, $type) = @_;
+
+    $this->{mime_type} = $type;
+
+    return $this;
+}
+
 #
 # Interface to be implemented by heirs
 #
@@ -208,8 +234,15 @@ sub add_file_now
 ############################################################
 sub mime_type
 {
-    confess "deferred";
+    my ($this) = @_;
+
+    my $type = $this->{mime_type};
+
+    confess "deferred" unless $type;
+
+    return $type;
 }
+
 ############################################################
 sub _build_data
 {

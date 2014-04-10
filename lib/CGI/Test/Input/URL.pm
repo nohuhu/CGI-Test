@@ -25,8 +25,12 @@ use base qw(CGI::Test::Input);
 #
 sub new
 {
-    my $this = bless {}, shift;
+    my $this = bless {
+        mime_type => 'application/x-www-form-urlencoded'
+    }, shift;
+
     $this->_init;
+
     return $this;
 }
 
@@ -40,11 +44,6 @@ sub make
 #
 # Defined interface
 #
-
-sub mime_type
-{
-    return "application/x-www-form-urlencoded";
-}
 
 #
 # ->_build_data

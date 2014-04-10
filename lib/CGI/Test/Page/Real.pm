@@ -34,12 +34,6 @@ sub new
 # Attribute access
 #
 
-sub raw_content
-{
-    my $this = shift;
-    return $this->{raw_content};
-}
-
 sub uri
 {
     my $this = shift;
