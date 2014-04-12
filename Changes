@@ -1,3 +1,20 @@
+Fri Apr 11 21:58:37 PSD 2014    Alex Tokarev <tokarev@cpan.org>
+
+        Version 0.31
+
+        Added methods that return base URI to CGI::Test.
+
+        An error page is now returned if the script failed with 5xx
+        HTTP status; an ordinary page was returned previously.
+
+        Besides PERL5LIB, a new environment variable PERL will be
+        populated now for CGI scripts, containing the path to perl
+        binary. CGI scripts can use it to ensure they are running
+        under the same Perl version as CGI::Test itself.
+
+        It is now possible to set raw POST data and MIME type in
+        the Input field objects.
+
 Mon May 28 18:37:24 PSD 2012    Alexander Tokarev <tokarev@cpan.org>
 
         Version 0.3

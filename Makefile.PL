@@ -2,7 +2,7 @@
 # $Id$
 #
 #  Copyright (c) 2001, Raphael Manfredi
-#  Copyright (c) 2011, 2012 Alexander Tokarev
+#  Copyright (c) 2011-2014 Alexander Tokarev
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.

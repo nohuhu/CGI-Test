@@ -1138,44 +1138,20 @@ to disappointment.
 
 =item *
 
-There is no support for testing a script in-situ, i.e. via a real web server,
-whereby C<CGI::Test> would merely act as a client.  Currently, scripts are
-run internally only, and therefore it is not possible to validate the
-installation procedure on the server.
-
-=item *
-
 There is no support for plain document retrieval: only CGI scripts can
 be fetched by an HTTP request for now.
-
-=item *
-
-There is no support for javascript (!).  Plain buttons attached to scripts
-will do nothing when pressed...
-
-=item *
-
-There is no support for frames (!).
-
-=item *
-
-There is no support for Java (!).  Perhaps if I work for Sun one day...
-
-=item *
-
-There is no support for the <ISINDEX> tag, which is deprecated.
 
 =back
 
 =head1 PUBLIC REPOSITORY
 
-CGI::Test now has a publicly accessible Git server provided by GitHub.com:
+CGI::Test now has a publicly accessible Git server provided by Github.com:
 L<http://github.com/nohuhu/CGI-Test>
 
 =head1 REPORTING BUGS
 
-Please use CPAN RT or e-mail your bug reports, ideas, questions etc to
-module's maintainer.
+Please use Github issue tracker to open bug reports and maintenance
+requests.
 
 =head1 AUTHORS
 
@@ -1183,7 +1159,7 @@ The original author is Raphael Manfredi.
 
 Steven Hilton was long time maintainer of this module.
 
-Current maintainer is Alexander Tokarev F<E<lt>tokarev@cpan.orgE<gt>>.
+Current maintainer is Alex Tokarev F<E<lt>tokarev@cpan.orgE<gt>>.
 
 =head1 SEE ALSO
 

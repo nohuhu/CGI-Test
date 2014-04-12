@@ -1,7 +1,7 @@
                            CGI::Test 0.3
                  Copyright (c) 2001, Raphael Manfredi
 
-        Current maintainer: Alexander Tokarev <tokarev@cpan.org>
+          Current maintainer: Alex Tokarev <tokarev@cpan.org>
 
 ------------------------------------------------------------------------
     This program is free software; you can redistribute it and/or modify
@@ -36,10 +36,5 @@ The framework can be used to easily "test" that the various expected
 widget controls are there, without necessarily interacting with the
 widgets.  You also have access to the raw HTML tree if you wish to
 further inspect the generation.
-
-Two important limitations are expected to be removed "soon": the
-inability to test a script in-situ, through direct HTTP requests,
-meaning it is ran by the HTTP server itself, and the inability to
-handle cookies.
 
 -- Raphael Manfredi <Raphael_Manfredi@pobox.com>
