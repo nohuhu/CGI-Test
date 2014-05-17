@@ -10,6 +10,8 @@
 #
 use ExtUtils::MakeMaker;
 
+die "OS unsupported" if $^O =~ /Win32/;
+
 # Munge test CGI scripts so that they run under current Perl
 my @cgi_files = do {
     my $cgi_dir = 't/cgi';

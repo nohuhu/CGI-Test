@@ -40,6 +40,12 @@ sub raw_content {
     return $self->{raw_content};
 }
 
+sub raw_content_ref {
+    my ($self) = @_;
+
+    return \$self->{raw_content};
+}
+
 ######################################################################
 sub content_type
 {

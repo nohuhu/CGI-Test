@@ -1,3 +1,10 @@
+Fri May 16 20:03:11 PSD 2014    Alex Tokarev <tokarev@cpan.org>
+
+        Version 0.32
+
+        Makefile.PL will now bail out in Windows with CPAN Testers
+        friendly message to avoid bogus FAIL reports.
+
 Fri Apr 11 21:58:37 PSD 2014    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.31

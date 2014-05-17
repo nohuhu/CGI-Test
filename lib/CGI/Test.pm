@@ -24,7 +24,7 @@ use Cwd qw(abs_path);
 require Exporter;
 use vars qw($VERSION @ISA @EXPORT);
 
-$VERSION = '0.31';
+$VERSION = '0.32';
 @ISA     = qw(Exporter);
 @EXPORT  = qw(ok);
 
@@ -49,8 +49,8 @@ sub new
 
     my $ubase = $params{-base_url};
     my $dir   = $params{-cgi_dir};
-    my $doc   = $params{-doc_dir} || "/var/www";
-    my $tmp   = $params{-tmp_dir} || $ENV{TMPDIR} || "/tmp";
+    my $doc   = $params{-doc_dir} || ".";
+    my $tmp   = $params{-tmp_dir} || $ENV{TMPDIR} || $ENV{TEMP} || "/tmp";
     my $env   = $params{-cgi_env};
 
     my $uri = URI->new($ubase);

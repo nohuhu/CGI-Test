@@ -40,12 +40,6 @@ sub uri
     return $this->{uri};
 }
 
-sub raw_content_ref
-{
-    my $this = shift;
-    return \$this->{raw_content};
-}
-
 #
 # ->_init
 #
