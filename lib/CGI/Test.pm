@@ -10,7 +10,7 @@ package CGI::Test;
 
 use strict;
 use warnings;
-no  warnings 'uninitialized';
+#no  warnings 'uninitialized';
 
 use Carp;
 use HTTP::Status;
@@ -20,13 +20,11 @@ use File::Spec;
 use File::Basename;
 use Cwd qw(abs_path);
 
+use vars qw($VERSION);
 
-require Exporter;
-use vars qw($VERSION @ISA @EXPORT);
+$VERSION = '0.50';
 
-$VERSION = '0.32';
-@ISA     = qw(Exporter);
-@EXPORT  = qw(ok);
+use constant WINDOWS => eval { $^O =~ /win/i };
 
 #############################################################################
 #
@@ -364,16 +362,37 @@ sub _cgi_request
     my @post = ();
     local $SIG{PIPE} = 'IGNORE';
     local (*PREAD, *PWRITE);
-    if (defined $input)
-    {
-        unless (pipe(PREAD, PWRITE))
-        {
-            warn "can't open pipe: $!";
-            return $error->new(RC_INTERNAL_SERVER_ERROR, $this);
+    
+    my ($in_fh, $out_fh, $in_fname, $out_fname);
+    
+    if (defined $input) {
+        # In Windows, we use temp files instead of pipes to avoid
+        # duplication errors
+        if ( WINDOWS ) {
+            ($in_fh, $in_fname) =
+                mkstemp(File::Spec->catfile($this->tmp_dir, "cgi_in.XXXXXX"));
+            
+            binmode $in_fh;
+            
+            syswrite $in_fh, $input->data, $input->length;
+            close $in_fh;
+            
+            @post = (
+                -in_fname => $in_fname,
+                -input    => $input,
+            );
         }
+        else {
+            if ( not pipe(PREAD, PWRITE) ) {
+                warn "can't open pipe: $!";
+                return $error->new(RC_INTERNAL_SERVER_ERROR, $this);
+            }
 
-        @post = (-in    => \*PREAD,
-                 -input => $input,);
+            @post = (
+                -in    => \*PREAD,
+                -input => $input,
+            );
+        }
     }
 
     #
@@ -381,8 +400,10 @@ sub _cgi_request
     # the script is done.
     #
 
-    my ($fh, $fname) =
+    ($out_fh, $out_fname) =
       mkstemp(File::Spec->catfile($this->tmp_dir, "cgi_out.XXXXXX"));
+    
+    close $out_fh if WINDOWS;
 
     select((select(STDOUT), $| = 1)[ 0 ]);
     print STDOUT "";    # Flush STDOUT before forking
@@ -397,21 +418,24 @@ sub _cgi_request
     #
     # Child will run the CGI program with no input if it's a GET and
     # output stored to $fh.  When issuing a POST, data will be provided
-    # by the parent through a pipe.
+    # by the parent through a pipe in Unixy systems, or through a temp file
+    # in Windows.
     #
 
-    if ($pid == 0)
-    {
+    if ($pid == 0) {
         close PWRITE if defined $input;    # Writing side of the pipe
+        
         $this->_run_cgi(
             -script_file => $script,         # Real path
             -script_name => $script_name,    # Virtual path, given in URI
             -user        => $user,
-            -out         => $fh,
+            -out         => $out_fh,
+            -out_fname   => $out_fname,
             -uri         => $u,
             -path_info   => $path,
             @post,                           # Additional params for POST
-            );
+        );
+        
         confess "not reachable!";
     }
 
@@ -419,7 +443,8 @@ sub _cgi_request
     # Parent process
     #
 
-    close $fh;
+    close $out_fh unless WINDOWS;
+    
     if (defined $input)
     {                                        # Send POST input data
         close PREAD;
@@ -433,7 +458,8 @@ sub _cgi_request
     {
         warn "waitpid returned with pid=$child, but expected pid=$pid";
         kill 'TERM', $pid or warn "can't SIGTERM pid $pid: $!";
-        unlink $fname or warn "can't unlink $fname: $!";
+        unlink $in_fname  or warn "can't unlink $in_fname: $!";
+        unlink $out_fname or warn "can't unlink $out_fname: $!";
         return $error->new(RC_NO_CONTENT, $this);
     }
 
@@ -441,11 +467,12 @@ sub _cgi_request
     # Get header within generated response, and determine Content-Type.
     #
 
-    my $header = $this->_parse_header($fname);
+    my $header = $this->_parse_header($out_fname);
     unless (scalar keys %$header)
     {
         warn "script $script_name generated no valid headers";
-        unlink $fname or warn "can't unlink $fname: $!";
+        unlink $in_fname  or warn "can't unlink $in_fname: $!";
+        unlink $out_fname or warn "can't unlink $out_fname: $!";
         return $error->new(RC_INTERNAL_SERVER_ERROR, $this);
     }
     
@@ -453,7 +480,7 @@ sub _cgi_request
     # Return error page if we got 5xx status
     #
     
-    if ( my ($status) = $header->{Status} =~ /^(5\d\d)/ ) {
+    if ( my ($status) = ($header->{Status} || '') =~ /^(5\d\d)/ ) {
         return $error->new($status, $this);
     }
 
@@ -478,13 +505,17 @@ sub _cgi_request
 
     my $page = $objtype->new(
                         -server       => $this,
-                        -file         => $fname,
+                        -file         => $out_fname,
                         -content_type => $type,    # raw type, with parameters
                         -user         => $user,
                         -uri          => $u,
                         );
-
-    unlink $fname or warn "can't unlink $fname: $!";
+    
+    if ($in_fname) {
+        unlink $in_fname  or warn "can't unlink $in_fname: $!";
+    }
+    
+    unlink $out_fname or warn "can't unlink $out_fname: $!";
 
     return $page;
 }
@@ -510,29 +541,33 @@ sub _run_cgi
 
     my %params = @_;
 
-    my $script = $params{-script_file};
-    my $name   = $params{-script_name};
-    my $user   = $params{-user};
-    my $in     = $params{-in};
-    my $out    = $params{-out};
-    my $u      = $params{-uri};
-    my $path   = $params{-path_info};
-    my $input  = $params{-input};
+    my $script    = $params{-script_file};
+    my $name      = $params{-script_name};
+    my $user      = $params{-user};
+    my $in        = $params{-in};
+    my $in_fname  = $params{-in_fname};
+    my $out       = $params{-out};
+    my $out_fname = $params{-out_fname};
+    my $u         = $params{-uri};
+    my $path      = $params{-path_info};
+    my $input     = $params{-input};
 
     #
     # Connect file descriptors.
     #
 
-    if (defined $in)
-    {
-        open(STDIN, '<&=' . fileno($in)) || die "can't redirect STDIN: $!";
+    if ( !WINDOWS ) {
+        if (defined $in)
+        {
+            open(STDIN, '<&=' . fileno($in)) || die "can't redirect STDIN: $!";
+        }
+        else
+        {
+            my $devnull = File::Spec->devnull;
+            open(STDIN, $devnull) || die "can't open $devnull: $!";
+        }
+        open(STDOUT, '>&=' . fileno($out)) || die "can't redirect STDOUT: $!";
     }
-    else
-    {
-        my $devnull = File::Spec->devnull;
-        open(STDIN, $devnull) || die "can't open $devnull: $!";
-    }
-    open(STDOUT, '>&=' . fileno($out)) || die "can't redirect STDOUT: $!";
 
     #
     # Setup default CGI environment.
@@ -548,7 +583,7 @@ sub _run_cgi
     # If there's no input, delete CONTENT_* variables.
     #
 
-    if (defined $in)
+    if (defined $input)
     {
         $ENV{CONTENT_TYPE}   = $input->mime_type;
         $ENV{CONTENT_LENGTH} = $input->length;
@@ -627,9 +662,18 @@ sub _run_cgi
 
     chdir $directory or die "can't cd to $directory: $!";
 
-    {exec "./$basename"}
+    if ( WINDOWS ) {
+        my $cmd_line = $input ? "$basename < ${in_fname} > ${out_fname}"
+                     :          "$basename >${out_fname}"
+                     ;
+
+        exec $cmd_line;
+    }
+    else {
+        exec "./$basename";
+    }
+
     die "could not exec $script: $!";
-    return;
 }
 
 ######################################################################
@@ -680,22 +724,6 @@ sub _parse_header
     }
     close FILE;
     return \%header;
-}
-
-######################################################################
-#
-# ok
-#
-# Useful to print test result when using Test::Harness.
-#
-######################################################################
-sub ok
-{
-    my ($num, $ok, $comment) = @_;
-    print "not " unless $ok;
-    print "ok $num";
-    print " # $comment" if defined $comment;
-    print "\n";
 }
 
 1;
