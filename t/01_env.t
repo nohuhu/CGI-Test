@@ -1,8 +1,18 @@
+use Config;
 use Test::More tests => 16;
 
 use CGI::Test;
 
 use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
+
+#
+# This is a workaround for a nasty Fcntl loading problem: it seems that
+# certain custom Perl builds fail to allocate some kind of resources, or
+# just try to load wrong shared objects. This results in tests
+# failing miserably; considering that custom builds are very common
+# among CPAN testers, this could be considered a serious problem.
+#
+$ENV{PATH} = $Config{bin} . ':' . $ENV{PATH};
 
 my $SERVER = "some-server";
 my $PORT = 18;

@@ -1,15 +1,18 @@
 package browse;
 
+use Config;
+use Test::More;
+
 use CGI::Test;
 
-use Config;
+use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 
 #
-# This is a fix for nasty Fcntl loading problem: it seems that
-# custom-built Perl fails to allocate some kind of resources, or
-# just tries to load wrong shared object. This results in tests
+# This is a workaround for a nasty Fcntl loading problem: it seems that
+# certain custom Perl builds fail to allocate some kind of resources, or
+# just try to load wrong shared objects. This results in tests
 # failing miserably; considering that custom builds are very common
-# among CPAN testers, it is a serious problem.
+# among CPAN testers, this could be considered a serious problem.
 #
 $ENV{PATH} = $Config{bin} . ':' . $ENV{PATH};
 
@@ -19,41 +22,47 @@ sub browse {
     my $method  = $params{method};
     my $enctype = $params{enctype};
 
-	print "1..27\n";
+    plan tests => 27;
 
 	my $BASE = "http://server:18/cgi-bin";
+    my $SCRIPT = WINDOWS ? 'getform.bat' : 'getform';
+    my $ACTION = WINDOWS ? 'dumpargs.bat' : 'dumpargs';
+
 	my $ct = CGI::Test->new(
 		-base_url	=> $BASE,
 		-cgi_dir	=> "t/cgi",
 	);
 
-	my $query = "action=/cgi-bin/dumpargs";
+	my $query = "action=/cgi-bin/$ACTION";
 	$query .= "&method=$method" if defined $method;
 	$query .= "&enctype=$enctype" if defined $enctype;
 
-	my $page = $ct->GET("$BASE/getform?$query");
+	my $page = $ct->GET("$BASE/$SCRIPT?$query");
 	my $form = $page->forms->[0];
 
-	ok 1, $form->action eq "/cgi-bin/dumpargs";
+	is $form->action, "/cgi-bin/$ACTION", "Action: " . $form->action;
 
 	my $submit = $form->submit_by_name("Send");
-	ok 2, defined $submit;
+
+	ok defined $submit, "Send submit defined";
 
 	my $page2 = $submit->press;
-	ok 3, $page2->is_ok;
+
+	ok $page2->is_ok, "Page 2 OK";
 
 	my $args = parse_args($page2->raw_content);
-	ok 4,  $args->{counter} == 1;
-	ok 5,  $args->{title} eq "Mr";
-	ok 6,  $args->{name} eq "";
-	ok 7,  $args->{skills} eq "listening";
-	ok 8,  $args->{new} eq "ON";
-	ok 9,  $args->{color} eq "white";
-	ok 10, $args->{note} eq "";
-	ok 11, $args->{months} eq "Jul";
-	ok 12, $args->{passwd} eq "";
-	ok 13, $args->{Send} eq "Send";
-	ok 14, $args->{portrait} eq "";
+
+	is  $args->{counter}, 1, "Page 2 counter";
+	is  $args->{title}, "Mr", "Page 2 title";
+	is  $args->{name}, "", "Page 2 name";
+	is  $args->{skills}, "listening", "Page 2 skills";
+	is  $args->{new}, "ON", "Page 2 new";
+	is  $args->{color}, "white", "Page 2 color";
+	is  $args->{note}, "", "Page 2 note";
+	is  $args->{months}, "Jul", "Page 2 months";
+	is  $args->{passwd}, "", "Page 2 passwd";
+	is  $args->{Send}, "Send", "Page 2 send";
+	is  $args->{portrait}, "", "Page 2 portrait";
 
 	my $r = $form->radio_by_name("title");
 	$r->check_tagged("Miss");
@@ -81,26 +90,27 @@ sub browse {
 	$t = $form->input_by_name("note");
 	$t->replace("this\nis\nsome\ntext");
 
-	$page2 = $submit->press;
-	my $args2 = parse_args($page2->raw_content);
+	my $page3 = $submit->press;
+	my $args3 = parse_args($page3->raw_content);
 
-	ok 15, $args2->{counter} == 1;
-	ok 16, $args2->{title} eq "Miss";
-	ok 17, $args2->{name} eq "";
-	ok 18, $args2->{skills} eq "listening";
-	ok 19, !exists $args2->{new};			# unchecked, not submitted
-	ok 20, $args2->{color} eq "red";
-	ok 21, $args2->{note} eq "this is some text";
-	ok 22, join(" ", sort split(' ', $args2->{months})) eq "Feb Jan";
-	ok 23, $args2->{passwd} eq "foobar";
-	ok 24, $args2->{Send} eq "Send";
-	ok 25, $args2->{portrait} eq "this is it, disappointed?";
+	is $args3->{counter}, 1, "Page 3 counter";
+	is $args3->{title}, "Miss", "Page 3 title";
+	is $args3->{name}, "", "Page 3 name";
+	is $args3->{skills}, "listening", "Page 3 skills";
+	ok !exists $args3->{new}, "Page 3 new";     # unchecked, not submitted
+	is $args3->{color}, "red", "Page 3 color";
+	is $args3->{note}, "this is some text", "Page 3 note";
+	is join(" ", sort split(' ', $args3->{months})), "Feb Jan", "Page 3 months";
+	is $args3->{passwd}, "foobar", "Page 3 passwd";
+	is $args3->{Send}, "Send", "Page 3 send";
+	is $args3->{portrait}, "this is it, disappointed?", "Page 3 portrait";
 
 	# Ensure we tested what was requested
 	$method = "GET" unless defined $method;
-	ok 26, $form->method eq $method;
-	ok 27, substr($form->enctype, 0, 5) eq
-		(defined $enctype ? "multi" : "appli");
+    my $enctype_qr = defined $enctype ? qr/multipart/ : qr/urlencoded/;
+
+	is $form->method, $method, "Form method";
+	like $form->enctype, $enctype_qr, "Form encoding";
 }
 
 # Rebuild parameter list from the output of dumpargs into a HASH

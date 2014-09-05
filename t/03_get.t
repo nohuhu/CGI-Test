@@ -1,8 +1,12 @@
+use Config;
+
 use Test::More tests => 14;
 
 use CGI::Test;
 
 use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
+
+$ENV{PATH} = $Config{bin} . ':' . $ENV{PATH};
 
 my $BASE = "http://server:18/cgi-bin";
 my $SCRIPT = WINDOWS ? "getform.bat" : "getform";

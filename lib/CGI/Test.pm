@@ -319,8 +319,6 @@ sub _cgi_request
 
     substr($upath, 0, length $base_path) = '';
 
-#    logdbg 'info', "uri $uri -> script+path $upath";
-
     #
     # We have script + path_info in the $upath variable.  To determine where
     # the path_info starts, we have to walk through the components and
@@ -350,8 +348,6 @@ sub _cgi_request
     my $script_name = $base_path . join("/",        @script);        # Virtual
     my $path        = "/" . join("/",               @components);    # Virtual
 
-#    logdbg 'info', "script=$script, path=$path";
-
     return $error->new(RC_NOT_FOUND,    $this) unless -f $script;
     return $error->new(RC_UNAUTHORIZED, $this) unless -x $script;
 
@@ -367,7 +363,7 @@ sub _cgi_request
     
     if (defined $input) {
         # In Windows, we use temp files instead of pipes to avoid
-        # duplication errors
+        # stream duplication errors
         if ( WINDOWS ) {
             ($in_fh, $in_fname) =
                 mkstemp(File::Spec->catfile($this->tmp_dir, "cgi_in.XXXXXX"));
@@ -423,7 +419,7 @@ sub _cgi_request
     #
 
     if ($pid == 0) {
-        close PWRITE if defined $input;    # Writing side of the pipe
+        close PWRITE if defined $input && !WINDOWS; # Writing side of the pipe
         
         $this->_run_cgi(
             -script_file => $script,         # Real path
@@ -445,7 +441,7 @@ sub _cgi_request
 
     close $out_fh unless WINDOWS;
     
-    if (defined $input)
+    if (defined $input && !WINDOWS)
     {                                        # Send POST input data
         close PREAD;
         syswrite PWRITE, $input->data, $input->length;
@@ -599,7 +595,7 @@ sub _run_cgi
     # which are very request-specific:
     #
 
-    $ENV{REQUEST_METHOD}  = defined $in ? "POST" : "GET";
+    $ENV{REQUEST_METHOD}  = defined $input ? "POST" : "GET";
     $ENV{PATH_INFO}       = $path;
     $ENV{SCRIPT_NAME}     = $name;
     $ENV{SCRIPT_FILENAME} = $script;
@@ -664,7 +660,7 @@ sub _run_cgi
 
     if ( WINDOWS ) {
         my $cmd_line = $input ? "$basename < ${in_fname} > ${out_fname}"
-                     :          "$basename >${out_fname}"
+                     :          "$basename < NUL >${out_fname}"
                      ;
 
         exec $cmd_line;
