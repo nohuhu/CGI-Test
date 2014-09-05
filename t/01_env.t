@@ -69,7 +69,7 @@ sub parse_content {
 	my ($h, $cref) = @_;
 	%$h = ();
 	foreach my $l (split /\n/, $$cref) {
-		my ($k, $v) = $l =~ /^([^=]+)\s*=\s*(.*)$/;
+		my ($k, $v) = $l =~ /^([^\s=]+)\s*=\s*(.*)$/;
 		$h->{$k} = $v;
 	}
 }
