@@ -32,10 +32,10 @@ lib/CGI/Test/Page/Text.pm
 Makefile.PL
 MANIFEST
 README
-t/browse.pl
 t/cgi/dumpargs.in
 t/cgi/getform.in
 t/cgi/printenv.in
+t/lib/browse.pm
 t/01_env.t
 t/02_parsing.t
 t/03_get.t

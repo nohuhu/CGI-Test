@@ -12,7 +12,7 @@ use ExtUtils::MakeMaker;
 use Config;
 
 # /win/ won't work since it will also match Darwin (Mac OS X)
-my ($WINDOWS) = $^O =~ /Win32|cygwin/;
+use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 
 # Munge test CGI scripts so that they run under current Perl
 my @cgi_files = do {
@@ -28,9 +28,7 @@ for my $file ( @cgi_files ) {
         <$fin>;
     };
 
-    $text =~ s{#!PERL}{#!${^X}};
-
-    if ( $WINDOWS ) {
+    if ( WINDOWS ) {
         $file =~ s{\.in}{\.bat};
         $file =~ s{/}{\\\\}g;
 
@@ -41,6 +39,8 @@ for my $file ( @cgi_files ) {
         close $fout;
     }
     else {
+        $text =~ s{#!PERL}{#!${^X}};
+
         $file =~ s{\.in}{};
 
         open my $fout, '>', $file or die "Can't open $file for writing: $!";
@@ -51,11 +51,9 @@ for my $file ( @cgi_files ) {
     };
 };
 
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
 WriteMakefile(
     NAME              => 'CGI::Test',
-    VERSION_FROM      => 'lib/CGI/Test.pm', # finds $VERSION
+    VERSION_FROM      => 'lib/CGI/Test.pm',
     PREREQ_PM         => {
         'CGI'               => '0',
         'Digest::MD5'       => '0',

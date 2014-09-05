@@ -1,85 +1,117 @@
-use Test::More tests => 40;
+use Test::More tests => 44;
 
 use CGI::Test;
+use URI;
+
+use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 
 my $BASE = "http://server:18/cgi-bin";
+my $SCRIPT = WINDOWS ? "getform.bat" : "getform";
 
 my $ct = CGI::Test->new(
 	-base_url	=> $BASE,
 	-cgi_dir	=> "t/cgi",
 );
 
-ok 1, defined $ct;
+ok defined $ct, "Got CGI::Test object";
+isa_ok $ct, 'CGI::Test', 'isa';
 
-my $page = $ct->GET("$BASE/getform");
-ok 2, $page->is_ok;
-ok 3, length $page->raw_content;
-ok 4, $page->content_type =~ m|^text/html\b|;
+my $page = $ct->GET("$BASE/$SCRIPT");
+my $raw_length = length $page->raw_content;
+
+ok $page->is_ok, "Page OK";
+ok !$page->is_error, "No errors in page " . $page->error_code;
+
+ok $raw_length, "Got raw content length: $raw_length";
+like $page->content_type, qr|^text/html\b|, "Page content type matches";
 
 my $forms = $page->forms;
-ok 5, @$forms == 1;
+
+cmp_ok @$forms, '==', 1, "Number of forms";
 
 my $form = $forms->[0];
 
-my @names;
 my $rg = $form->radio_groups;
-ok 6, ref $rg && (@names = $rg->names) && 1;		# ok(x, 1, undef)
-ok 7, @names == 1;
+my @names = $rg->names;
+
+ok $rg, "Radio groups defined";
+is @names, 1, "Number of radio groups";
 
 my $r_groupname = $names[0];
-ok 8, $rg->is_groupname($r_groupname);
+
+ok $rg->is_groupname($r_groupname), "Got radio group name: $r_groupname";
+
 my @buttons = $rg->widgets_in($r_groupname);
-ok 9, @buttons == 3;
+
+is @buttons, 3, "Number of buttons in radio group";
+is $rg->widget_count($r_groupname), 3, "Number of widgets in radio group";
 
 my $cg = $form->checkbox_groups;
-ok 10, ref $cg && (@names = $cg->names) && 1;
-ok 11, @names == 2;
+@names = $cg->names;
+
+ok $cg, "Checkbox groups defined";
+is @names, 2, "Number of checkbox groups";
 
 my $c_groupname = "skills";
-ok 12, $cg->is_groupname($c_groupname);
-@buttons = $cg->widgets_in($c_groupname);
-ok 13, @buttons == 4 && $cg->widget_count($c_groupname) == 4;
 
-ok 14, @{$form->inputs} == 4;		# 1 of each (field, area, passwd, file)
-ok 15, @{$form->buttons} == 4;
-ok 16, @{$form->menus} == 2;
-ok 17, @{$form->checkboxes} == 5;
+ok $cg->is_groupname($c_groupname), "Got checkbox group name: $c_groupname";
+
+@buttons = $cg->widgets_in($c_groupname);
+
+is @buttons, 4, "Number of buttons in cbox group";
+is $cg->widget_count($c_groupname), 4, "Number of widgets in cbox group";
+
+# 1 of each: field, area, passwd, file
+my @wants = qw/ 4 4 2 5 /;
+for my $type ( qw/ inputs buttons menus checkboxes / ) {
+    my $want = shift @wants;
+    my $have = $form->$type;
+
+    is @$have, $want, "Number of $type in form";
+}
 
 my $months = $form->menu_by_name("months");
-ok 18, defined $months;
-ok 19, !$months->is_popup;
-ok 20, $months->selected_count == 1;
-ok 21, @{$months->option_values} == 12;
-ok 22, $months->is_selected("Jul");
-ok 23, !$months->is_selected("Jan");
+
+ok defined $months, "Months menu defined";
+ok !$months->is_popup, "Months menu is not popup";
+is $months->selected_count, 1, "Months menu selected count";
+is @{$months->option_values}, 12, "Months menu option values";
+ok $months->is_selected("Jul"), "Months menu Jul is selected";
+ok !$months->is_selected("Jan"), "Months menu Jan is not selected";
 
 my $color = $form->menu_by_name("color");
-ok 24, defined $color;
-ok 25, $color->is_popup;
-ok 26, $color->is_selected("white");		# implicit selection
-ok 27, $color->selected_count == 1;
-ok 28, $color->option_values->[0] eq "white";
-ok 29, !$color->is_selected("black");
+
+ok  defined $color, "Color menu defined";
+ok $color->is_popup, "Color menu is popup";
+ok $color->is_selected("white"), "Color menu implicit selection";
+is $color->selected_count, 1, "Color menu selected count";
+is $color->option_values->[0], "white", "Color menu option value";
+ok !$color->is_selected("black"), "Color menu black is not selected";
 
 my @menus = $form->widgets_matching(sub { $_[0]->is_menu });
-ok 30, @menus == 2;
-my @radio = $form->radios_named("title");
-ok 31, @radio == 3;
 
-require URI;
-ok 32, URI->new($form->action)->path eq "/cgi-bin/getform";
-ok 33, $form->method eq "GET";
-ok 34, $form->enctype eq "application/x-www-form-urlencoded";
+is @menus, 2, "Number of menus";
+
+my @radio = $form->radios_named("title");
+
+is @radio, 3, "Number of title radios";
+
+is( URI->new($form->action)->path, "/cgi-bin/$SCRIPT", "Script path" );
+is $form->method, "GET", "HTTP method";
+is $form->enctype, "application/x-www-form-urlencoded", "Encoding";
 
 my @submit = grep { $_->name !~ /^\./ } $form->submit_list;
-ok 35, @submit == 2;
+
+is @submit, 2, "Number of submit buttons";
 
 @buttons = $cg->widgets_in("no-such-group");
-ok 36, @buttons == 0;
-ok 37, 0 == $cg->widget_count("no-such-group");
+
+is @buttons, 0, "Number of buttons in no-such-group";
+is $cg->widget_count("no-such-group"), 0, "Number of widgets in no-such-group";
 
 my $new = $form->checkbox_by_name("new");
-ok 38, defined $new;
-ok 39, $new->is_checked;
-ok 40, $new->is_standalone;
+
+ok defined $new, "New checkbox defined";
+ok $new->is_checked, "New checkbox is checked";
+ok $new->is_standalone, "New checkbox is standalone";
 

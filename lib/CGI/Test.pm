@@ -24,7 +24,7 @@ use vars qw($VERSION);
 
 $VERSION = '0.50';
 
-use constant WINDOWS => eval { $^O =~ /win/i };
+use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 
 #############################################################################
 #

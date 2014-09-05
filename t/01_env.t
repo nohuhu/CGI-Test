@@ -2,11 +2,13 @@ use Test::More tests => 16;
 
 use CGI::Test;
 
+use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
+
 my $SERVER = "some-server";
 my $PORT = 18;
 my $BASE = "http://${SERVER}:${PORT}/cgi-bin";
-my $SCRIPT = $^O =~ /win/i ? 'printenv.bat' : 'printenv';
-my $SCRIPT_FNAME = $^O =~ /win/i ? "t\\cgi\\$SCRIPT" : "t/cgi/$SCRIPT";
+my $SCRIPT = WINDOWS ? 'printenv.bat' : 'printenv';
+my $SCRIPT_FNAME = WINDOWS ? "t\\cgi\\$SCRIPT" : "t/cgi/$SCRIPT";
 
 my $ct = CGI::Test->new(
 	-base_url	=> $BASE,
@@ -23,7 +25,7 @@ my $USER = "ram";
 my $page = $ct->GET("$BASE/$SCRIPT/${PATH_INFO}?${QUERY}", $USER);
 my $raw_length = length $page->raw_content;
 
-ok !$page->is_error, "No errors in page";
+ok !$page->is_error, "No errors in page " . $page->error_code;
 ok $raw_length, "Got raw length: $raw_length";
 
 my %V;

@@ -1,44 +1,4 @@
-#
-# $Id: browse.pl,v 1.2 2003/09/29 11:00:50 mshiltonj Exp $
-#
-#  Copyright (c) 2001, Raphael Manfredi
-#  
-#  You may redistribute only under the terms of the Artistic License,
-#  as specified in the README file that comes with the distribution.
-#
-# HISTORY
-# $Log: browse.pl,v $
-# Revision 1.2  2003/09/29 11:00:50  mshiltonj
-#     CGI::Test has changed ownership. The new owner is Steven Hilton
-#     <mshiltonj@mshiltonj.com>.  Many thanks to Raphael Manfredi
-#     and Steve Fink.
-#
-#     CGI::Test is now hosted as a SourceForge project. It is located
-#     at <http://cgi-test.sourceforge.net>.
-#
-#     POD updated to reflect the above.
-#
-#     make() method on various objects has been deprecated, and has been
-#     replaced by more conventional (for me, at least) new() method.
-#     Support for make() may be removed in a later release.
-#
-#     Entire codebase reformatted using perltidy
-#     Go to <http://perltidy.sourceforge.net/> to see how neat it is.
-#
-#     Self-referential object variable name standardized to '$this'
-#     throughout code.
-#
-# Revision 1.1.1.1  2003/09/23 09:47:26  mshiltonj
-# Initial Import
-#
-# Revision 0.1.1.1  2001/04/17 11:25:18  ram
-# patch3: changed test 22 to perform explicit sorting
-#
-# Revision 0.1  2001/03/31 10:54:03  ram
-# Baseline for first Alpha release.
-#
-# $EndLog$
-#
+package browse;
 
 use CGI::Test;
 
