@@ -10,7 +10,6 @@ package CGI::Test;
 
 use strict;
 use warnings;
-#no  warnings 'uninitialized';
 
 use Carp;
 use HTTP::Status;
