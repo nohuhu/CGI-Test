@@ -1,3 +1,15 @@
+Fri Sep  5 19:34:34 PDT 2014    Alex Tokarev <tokarev@cpan.org>
+
+        Version 0.50
+
+        Windows compatibility! Tested with ActiveState and Strawberry
+        Perls 5.18.2.
+
+        ok() method exported by CGI::Test was deprecated and removed.
+
+        All tests rebased to Test::More, somewhat improved, and made
+        compatible with Windows environment.
+
 Fri May 16 20:03:11 PSD 2014    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.32
@@ -22,7 +34,7 @@ Fri Apr 11 21:58:37 PSD 2014    Alex Tokarev <tokarev@cpan.org>
         It is now possible to set raw POST data and MIME type in
         the Input field objects.
 
-Mon May 28 18:37:24 PSD 2012    Alexander Tokarev <tokarev@cpan.org>
+Mon May 28 18:37:24 PSD 2012    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.3
 
@@ -34,7 +46,7 @@ Mon May 28 18:37:24 PSD 2012    Alexander Tokarev <tokarev@cpan.org>
         Changed bugtracker attribute in Makefile.PL to point to
         Git tracker.
 
-Sun Mar 25 15:49:33 PSD 2012    Alexander Tokarev <tokarev@cpan.org>
+Sun Mar 25 15:49:33 PSD 2012    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.2.4
 
@@ -43,7 +55,7 @@ Sun Mar 25 15:49:33 PSD 2012    Alexander Tokarev <tokarev@cpan.org>
         module itself. This sometimes resulted in weird errors deep
         within Carp module.
 
-Mon Nov 21 00:17:38 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
+Mon Nov 21 00:17:38 MSD 2011    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.2.3
 
@@ -61,14 +73,14 @@ Mon Nov 21 00:17:38 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
 
         No other changes were made.
 
-Sun Oct 16 23:46:11 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
+Sun Oct 16 23:46:11 MSD 2011    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.2.2
 
         Bumping version up a notch to have CPAN indexer accept this
         module. No other changes were made.
 
-Wed Oct  5 22:21:38 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
+Wed Oct  5 22:21:38 MSD 2011    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.2.1
 
@@ -76,7 +88,7 @@ Wed Oct  5 22:21:38 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
         bump of a release deals with changes in documentation
         following ownership changes.
 
-Fri Sep 30 14:22:14 MSD 2011    Alexander Tokarev <tokarev@cpan.org>
+Fri Sep 30 14:22:14 MSD 2011    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.2.0
 
