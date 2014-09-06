@@ -644,8 +644,9 @@ sub _run_cgi
     # Since we're about to chdir() to the cgi-bin directory, we must anchor
     # any relative path to the current working directory.
     #
+    my $path_sep = WINDOWS ? ';' : ':';
 
-    $ENV{PERL5LIB} = join(':', map {-e $_ ? abs_path($_) : $_} @INC);
+    $ENV{PERL5LIB} = join($path_sep, map {-e $_ ? abs_path($_) : $_} @INC);
 
     #
     # Now run the script, changing the current directory to the location
