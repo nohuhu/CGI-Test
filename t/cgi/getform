@@ -1,6 +1,13 @@
-#!PERL
+#!/bin/sh
+
+exec 3<&0
+
+$PERL -x <<'END_OF_SCRIPT'
+#!perl
 
 use CGI qw/:standard/;
+
+open STDIN, '<&3' or die "Can't reopen STDIN";
 
 $\ = "\n";
 
@@ -85,4 +92,6 @@ print p(
 
 print endform;
 print end_html;
+
+END_OF_SCRIPT
 
