@@ -32,10 +32,6 @@ lib/CGI/Test/Page/Text.pm
 Makefile.PL
 MANIFEST
 README
-t/cgi/dumpargs.in
-t/cgi/getform.in
-t/cgi/printenv.in
-t/lib/browse.pm
 t/01_env.t
 t/02_parsing.t
 t/03_get.t
@@ -43,4 +39,11 @@ t/04_post.t
 t/05_play_get.t
 t/06_play_post.t
 t/07_play_multi.t
+t/cgi/dumpargs
+t/cgi/dumpargs.bat
+t/cgi/getform
+t/cgi/getform.bat
+t/cgi/printenv
+t/cgi/printenv.bat
+t/lib/browse.pm
 t/pod.t
