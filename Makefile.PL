@@ -33,6 +33,26 @@ END
 my $MM_VERSION  = $ExtUtils::MakeMaker::VERSION;
 my $github_repo = 'https://github.com/nohuhu/CGI-Test';
 
+my %MAIN_REQ = (
+    # Perl 5.20 warns that CGI is going to be removed
+    # from the core in 5.22, so we require it here
+    CGI                    => 0,
+
+    Storable               => '1.00',
+    URI                    => '1.10',
+    ($] >= 5.008                       # HTTP::Status is now in
+        ? ('HTTP::Message' => 0, )     # HTTP::Message bundle that
+        : ('LWP'           => 0, )     # requires 5.8+
+    ),
+    'HTML::TreeBuilder'    => 0,
+    'File::Temp'           => 0,
+    'File::Spec'           => 0,
+);
+
+my %TEST_REQ = (
+    'Test::More' => '0.82', # for explain()
+);
+
 WriteMakefile(
     NAME         => 'CGI::Test',
     ABSTRACT     => 'CGI regression test framework',
@@ -40,21 +60,26 @@ WriteMakefile(
 
     VERSION_FROM => 'lib/CGI/Test.pm',
     
-    PREREQ_PM    => {
-        # Perl 5.20 warns that CGI is going to be removed
-        # from the core in 5.22, so we require it here
-        CGI                 => 0,
-
-        Storable            => '1.00',
-        URI                 => '1.10',
-        ($] >= 5.008                    # HTTP::Status is now in
-         ? ('HTTP::Message' => 0, )     # HTTP::Message bundle that
-         : ('LWP'           => 0, )     # requires 5.8+
+    ($MM_VERSION >= 6.64
+        ? (
+            TEST_REQUIRES => \%TEST_REQ,
+            PREREQ_PM     => \%MAIN_REQ,
+        )
+        : (
+            ($MM_VERSION >= 6.5503
+                ? (
+                    BUILD_REQUIRES => \%TEST_REQ,
+                    PREREQ_PM      => \%MAIN_REQ,
+                )
+                : (
+                    PREREQ_PM => {
+                        %TEST_REQ,
+                        %MAIN_REQ,
+                    },
+                ),
+            ),
         ),
-        'HTML::TreeBuilder' => 0,
-        'File::Temp'        => 0,
-        'File::Spec'        => 0,
-    },
+    ),
 
     ($MM_VERSION >= 6.57
         ? ( AUTHOR => [
