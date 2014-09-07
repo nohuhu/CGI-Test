@@ -21,7 +21,7 @@ print header;
 my $method = param("method") || request_method();
 my $action = param("action") || url();
 print start_html("$method form"), h1("$method form");
-print startform(
+print start_form(
 	-method		=> $method eq "POST" ? "POST" : "GET",
 	-enctype	=> param("enctype") eq "M" ?
 			"multipart/form-data" : "application/x-www-form-urlencoded",
@@ -96,7 +96,7 @@ print p(
 	),
 );
 
-print endform;
+print end_form;
 print end_html;
 
 
