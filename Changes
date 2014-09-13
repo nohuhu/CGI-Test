@@ -1,3 +1,12 @@
+Sat Sep 13 10:52:26 PDT 2014    Alex Tokarev <tokarev@cpan.org>
+
+        Version 0.52
+
+        Fixed a bug that caused test failures in Windows.
+
+        Fixed a bug in Makefile.PL that made Github repository
+        gone missing.
+
 Sat Sep  6 23:15:57 PDT 2014    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.51
