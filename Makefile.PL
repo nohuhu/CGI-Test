@@ -7,6 +7,9 @@
 #  as specified in the README file that comes with the distribution.
 #
 #
+use strict;
+use warnings;
+
 use ExtUtils::MakeMaker;
 use Config;
 
@@ -99,7 +102,7 @@ WriteMakefile(
         ? ( META_MERGE => {
                 resources   => {
                     bugtracker  => "$github_repo/issues",
-                    repository  => "$guthub_repo",
+                    repository  => "$github_repo",
                 },
             },
         )
