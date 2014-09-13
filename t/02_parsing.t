@@ -7,7 +7,7 @@ use CGI::Test;
 
 use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 
-$ENV{PATH} = $Config{bin} . ':' . $ENV{PATH};
+$ENV{PATH} = $Config{bin} . (WINDOWS ? ';' : ':') . $ENV{PATH};
 
 my $BASE = "http://server:18/cgi-bin";
 my $SCRIPT = WINDOWS ? "getform.bat" : "getform";

@@ -12,7 +12,7 @@ use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 # failing miserably; considering that custom builds are very common
 # among CPAN testers, this could be considered a serious problem.
 #
-$ENV{PATH} = $Config{bin} . ':' . $ENV{PATH};
+$ENV{PATH} = $Config{bin} . (WINDOWS ? ';' : ':') . $ENV{PATH};
 
 my $SERVER = "some-server";
 my $PORT = 18;
