@@ -13,7 +13,7 @@ goto endofperl
 #!perl
 #line 15
 
-use CGI qw/:standard/;
+use CGI qw/:standard :no_xhtml/;
 
 $\ = "\n";
 

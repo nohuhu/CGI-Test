@@ -5,7 +5,7 @@ exec 3<&0
 $PERL -x <<'END_OF_SCRIPT'
 #!perl
 
-use CGI qw/:standard/;
+use CGI qw/:standard :no_xhtml/;
 
 open STDIN, '<&3' or die "Can't reopen STDIN";
 
