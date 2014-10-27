@@ -731,7 +731,8 @@ CGI::Test - CGI regression test framework
 =head1 SYNOPSIS
 
  # In some t/script.t regression test, for instance
- use CGI::Test;                 # exports ok()
+ use CGI::Test;
+ use Test::More tests => 7;
 
  my $ct = CGI::Test->new(
     -base_url   => "http://some.server:1234/cgi-bin",
@@ -739,18 +740,18 @@ CGI::Test - CGI regression test framework
  );
 
  my $page = $ct->GET("http://some.server:1234/cgi-bin/script?arg=1");
- ok 1, $page->content_type =~ m|text/html\b|;
+ like $page->content_type, qr|text/html\b|, "Content type";
 
  my $form = $page->forms->[0];
- ok 2, $form->action eq "/cgi-bin/some_target";
+ is $form->action, "/cgi-bin/some_target", "Form action URI";
 
  my $menu = $form->menu_by_name("months");
- ok 3, $menu->is_selected("January");
- ok 4, !$menu->is_selected("March");
- ok 5, $menu->multiple;
+ ok $menu->is_selected("January"), "January selected";
+ ok !$menu->is_selected("March"),  "March not selected";
+ ok $menu->multiple,               "Menu is multi-choice";
 
  my $send = $form->submit_by_name("send_form");
- ok 6, defined $send;
+ ok defined $send, "Send form defined";
 
  #
  # Now interact with the CGI
@@ -758,7 +759,9 @@ CGI::Test - CGI regression test framework
 
  $menu->select("March");        # "click" on the March label
  my $answer = $send->press;     # "click" on the send button
- ok 7, $answer->is_ok;          # and make sure we don't get an HTTP error
+ 
+ # and make sure we don't get an HTTP error
+ ok $answer->is_ok, "Answer response";
 
 =head1 DESCRIPTION
 
@@ -809,35 +812,7 @@ contacted at all within the C<CGI::Test> framework, and the CGI script is
 ran through a proper call to one of the GET/POST method on the
 C<CGI::Test> object.
 
-Finally, since C<CGI::Test> is meant to be used from regression test
-scripts, it exports a single ok() routine which merely prints the messages
-expected by C<Test::Harness>.  This is the only functional routine in this
-module, all other accesses being made through a C<CGI::Test> object.
-
 =head1 INTERFACE
-
-=head2 Procedural Interface
-
-There is only one such routine:
-
-=over 4
-
-=item C<ok> I<num>, I<boolean> [, I<comment>]
-
-Prints the I<ok> or I<not ok> message for C<Test::Harness> depending
-on whether I<boolean> is respectively I<true> or I<false>.  An optional
-I<comment> string may be supplied as well and will be printed after a
-'#' sign:
-
-    ok 1, 2+2 == 4, "trivial arithmetic";
-
-will print:
-
-    ok 1 # trivial arithmetic
-
-since the test trivially succeeds.
-
-=back
 
 =head2 Creation Interface
 
