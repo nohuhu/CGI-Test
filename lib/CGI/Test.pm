@@ -21,7 +21,7 @@ use Cwd qw(abs_path);
 
 use vars qw($VERSION);
 
-$VERSION = '0.52';
+$VERSION = '1.000';
 
 use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 
