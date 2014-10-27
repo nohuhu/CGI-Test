@@ -1,3 +1,13 @@
+Sun Oct 26 22:06:02 PDT 2014    Alex Tokarev <tokarev@cpan.org>
+
+        Version 1.000
+
+        Windows support looks good, and the codebase is stable
+        enough to call it a release.
+
+        Also fixed a bug that caused test failures in Perls
+        older than 5.8.9.
+
 Sat Sep 13 10:52:26 PDT 2014    Alex Tokarev <tokarev@cpan.org>
 
         Version 0.52
