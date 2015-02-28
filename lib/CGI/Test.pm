@@ -1,6 +1,6 @@
 #################################################################
 #  Copyright (c) 2001, Raphael Manfredi
-#  Copyright (c) 2011-2014, Alex Tokarev
+#  Copyright (c) 2011-2015, Alex Tokarev
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
@@ -21,7 +21,7 @@ use Cwd qw(abs_path);
 
 use vars qw($VERSION);
 
-$VERSION = '1.000';
+$VERSION = '1.001';
 
 use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 

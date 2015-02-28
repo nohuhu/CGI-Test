@@ -1,3 +1,10 @@
+Fri Feb 27 23:11:34 PST 2015    Alex Tokarev <tokarev@cpan.org>
+
+        Version 1.001
+
+        Fixed test CGI scripts to be more compatible with old
+        Solaris /bin/sh.
+
 Sun Oct 26 22:06:02 PDT 2014    Alex Tokarev <tokarev@cpan.org>
 
         Version 1.000
