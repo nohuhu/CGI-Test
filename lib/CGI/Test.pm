@@ -1160,6 +1160,12 @@ Steven Hilton was long time maintainer of this module.
 
 Current maintainer is Alex Tokarev F<E<lt>tokarev@cpan.orgE<gt>>.
 
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the Artistic License, a copy of which can be
+found with perl.
+
 =head1 SEE ALSO
 
 CGI(3), CGI::Test::Page(3), CGI::Test::Form(3), CGI::Test::Input(3),
