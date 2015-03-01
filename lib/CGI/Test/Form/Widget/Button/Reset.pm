@@ -1,5 +1,6 @@
 package CGI::Test::Form::Widget::Button::Reset;
 use strict;
+use warnings;
 ##################################################################
 # $Id: Reset.pm 411 2011-09-26 11:19:30Z nohuhu@nohuhu.org $
 # $Name: cgi-test_0-104_t1 $
