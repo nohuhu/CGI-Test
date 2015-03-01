@@ -1,3 +1,6 @@
+use strict;
+use warnings; 
+
 use Test::More;
 
 if ( $ENV{POD_TESTS} ) {

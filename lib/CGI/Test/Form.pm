@@ -1,5 +1,6 @@
 package CGI::Test::Form;
 use strict;
+use warnings; 
 ####################################################################
 # $Id: Form.pm 411 2011-09-26 11:19:30Z nohuhu@nohuhu.org $
 # $Name: cgi-test_0-104_t1 $
