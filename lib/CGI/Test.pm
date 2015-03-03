@@ -21,7 +21,7 @@ use Cwd qw(abs_path);
 
 use vars qw($VERSION);
 
-$VERSION = '1.001';
+$VERSION = '1.002';
 
 use constant WINDOWS => eval { $^O =~ /Win32|cygwin/ };
 
@@ -1159,6 +1159,17 @@ The original author is Raphael Manfredi.
 Steven Hilton was long time maintainer of this module.
 
 Current maintainer is Alex Tokarev F<E<lt>tokarev@cpan.orgE<gt>>.
+
+=head1 LICENSE
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the Artistic License, a copy of which can be
+found with Perl 5.6.0.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+Artistic License for more details.
 
 =head1 SEE ALSO
 
