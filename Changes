@@ -1,3 +1,17 @@
+Mon Mar  2 20:21:30 PST 2015    Alex Tokarev <tokarev@cpan.org>
+
+        Version 1.002
+
+        Some of the fixes in 1.001 were too advanced for older
+        Perls, so reverting them.
+
+        Added 'use warnings' to all Perl scripts in the distro;
+        thanks to Hunter McMillen for the pull request.
+
+        Updated license notice to include Perl version that the
+        corresponding Artistic License was contained in, added
+        LICENSE section in the main pod.
+
 Fri Feb 27 23:11:34 PST 2015    Alex Tokarev <tokarev@cpan.org>
 
         Version 1.001
