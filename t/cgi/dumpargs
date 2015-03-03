@@ -5,7 +5,8 @@ $PERL -x 3<&0 <<'END_OF_SCRIPT'
 
 use CGI qw/:standard/;
 
-open STDIN, '<&=', 3 or die "Can't reopen STDIN";
+# 2 argument open here for older Perls
+open STDIN, '<&3' or die "Can't reopen STDIN";
 
 print header(-type => "text/plain");
 
