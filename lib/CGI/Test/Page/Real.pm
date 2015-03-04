@@ -73,24 +73,30 @@ sub _init
 #
 sub _read_raw_content
 {
-    my $this = shift;
-    my ($file) = @_;
+    my ($self, $file_name) = @_;
 
-    local *FILE;
-    open(FILE, $file) || die "can't open $file: $!";
-    my $size = -s FILE;
+    open my $fh, $file_name || die "Can't open $file_name: $!";
 
-    $this->{raw_content} = ' ' x -s (FILE);    # Pre-extend buffer
+    my %headers;
+    my $content_length;
 
-    local $_;
-    while (<FILE>)
-    {                                          # Skip header
-        last if /^\r?$/;
+    while (my $line = <$fh>) {
+        last if $line =~ /^\r?$/;
+
+        $line =~ s/\r\n$//;
+
+        my ($h, $v) = $line =~ /^(.*?):\s+(.*)$/;
+        $headers{ $h } = $v if defined $h;
+
+        $content_length = $v if $h =~ /content[-_]length/i;
     }
 
+    $self->{headers} = \%headers;
+    $self->{content_length} = $content_length;
+
     local $/ = undef;                          # Will slurp remaining
-    $this->{raw_content} = <FILE>;
-    close FILE;
+    $self->{raw_content} = <$fh>;
+    close $fh;
 
     return;
 }

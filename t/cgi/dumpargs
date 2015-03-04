@@ -10,6 +10,8 @@ open STDIN, '<&3' or die "Can't reopen STDIN";
 
 print header(-type => "text/plain");
 
+local $CGI::LIST_CONTEXT_WARN = 0;
+
 foreach my $name (param()) {
 	my @value = param($name);
 	foreach (@value) { tr/\n/ /; }
@@ -17,4 +19,3 @@ foreach my $name (param()) {
 }
 
 END_OF_SCRIPT
-

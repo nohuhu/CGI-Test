@@ -17,13 +17,13 @@ use CGI qw/:standard/;
 
 print header(-type => "text/plain");
 
+local $CGI::LIST_CONTEXT_WARN = 0;
+
 foreach my $name (param()) {
 	my @value = param($name);
 	foreach (@value) { tr/\n/ /; }
 	print "$name\t@value\n";
 }
 
-
 __END__
 :endofperl
-

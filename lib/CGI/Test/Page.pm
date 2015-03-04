@@ -47,6 +47,41 @@ sub raw_content_ref {
     return \$self->{raw_content};
 }
 
+sub headers {
+    my ($self) = @_;
+
+    return $self->{headers} || {};
+}
+
+sub header {
+    my ($self, $hdr) = @_;
+
+    my %header = %{ $self->headers };
+
+    my $value;
+
+    $hdr = lc $hdr;
+
+    # We're not concerned with performance here and would rather save
+    # the original headers as they were; hence searching instead of
+    # lowercasing header keys in _read_raw_content.
+    while ( my ($k, $v) = each %header ) {
+        if ( $hdr eq lc $k ) {
+            $value = $v;
+            last;
+        }
+    }
+
+    return $value;
+}
+
+######################################################################
+sub content_length
+{
+    my $this = shift;
+    return $this->{content_length};
+}
+
 ######################################################################
 sub content_type
 {

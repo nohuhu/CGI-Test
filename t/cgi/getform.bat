@@ -15,74 +15,78 @@ goto endofperl
 
 use CGI qw/:standard :no_xhtml/;
 
-$\ = "\n";
+local $CGI::LIST_CONTEXT_WARN = 0;
 
-print header;
+my $content = '';
+
 my $method = param("method") || request_method();
 my $action = param("action") || url();
-print start_html("$method form"), h1("$method form");
-print start_form(
-	-method		=> $method eq "POST" ? "POST" : "GET",
-	-enctype	=> param("enctype") eq "M" ?
+
+$content .= start_html("$method form");
+$content .= h1("$method form");
+$content .= start_form(
+	-action  => $action,
+	-method  => $method eq "POST" ? "POST" : "GET",
+	-enctype => param("enctype") eq "M" ?
 			"multipart/form-data" : "application/x-www-form-urlencoded",
-	-action		=> $action,
 );
 
 my $counter = param("counter") + 1;
 param("counter", $counter);
-print hidden("counter");
-print hidden("enctype");
 
-print "Title: ", radio_group(
+$content .= hidden("counter");
+$content .= hidden("enctype");
+
+$content .= "Title: " . radio_group(
 	-name		=> "title",
 	-values		=> [qw(Mr Ms Miss)],
-	-default	=> 'Mr'), br;
+	-default	=> 'Mr'
+) . br;
 
-print "Name: ", textfield("name"), br;
+$content .= "Name: " . textfield("name") . br;
 
-print "Skills: ", checkbox_group(
+$content .= "Skills: " . checkbox_group(
 	-name		=> "skills",
 	-values		=> [qw(cooking drawing teaching listening)],
 	-defaults	=> ['listening'],
-), br;
+) . br;
 
-print "New here: ", checkbox(
+$content .= "New here: " . checkbox(
 	-name		=> "new",
 	-checked	=> 1,
 	-value		=> "ON",
 	-label		=> "click me",
-), br;
+) . br;
 
-
-print "Color: ", popup_menu(
+$content .= "Color: " . popup_menu(
 	-name		=> "color",
 	-values		=> [qw(white black green red blue)],
 	-default	=> "white",
-), br;
+) . br;
 
-print "Note: ", textarea("note"), br;
+$content .= "Note: " . textarea("note") . br;
 
-print "Prefers: ", scrolling_list(
+$content .= "Prefers: " . scrolling_list(
 	-name		=> "months",
 	-values		=> [qw(Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)],
 	-size		=> 5,
 	-multiple	=> 1,
 	-default	=> [qw(Jul)],
-), br;
+) . br;
 
-print "Password: ", password_field(
+$content .= "Password: " . password_field(
 	-name		=> "passwd",
 	-size		=> 10,
 	-maxlength	=> 15,
-), br;
+) . br;
 
-print "Portrait: ", filefield(
+$content .= "Portrait: " . filefield(
 	-name		=> "portrait",
 	-size		=> 30,
 	-maxlength	=> 80,
-), br;
+) . br;
 
-print p(
+$content .= p(
 	reset(),
 	defaults("default"),
 	submit("Send"),
@@ -96,9 +100,14 @@ print p(
 	),
 );
 
-print end_form;
-print end_html;
+$content .= end_form;
+$content .= end_html;
 
+print header(
+    -Content_Length => length $content,
+);
+
+print $content;
 
 __END__
 :endofperl

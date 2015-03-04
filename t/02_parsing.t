@@ -4,7 +4,7 @@ use warnings;
 use Config;
 use URI;
 
-use Test::More tests => 44;
+use Test::More tests => 49;
 
 use CGI::Test;
 
@@ -30,6 +30,21 @@ ok $page->is_ok, "Page OK";
 ok !$page->is_error, "No errors in page " . $page->error_code;
 
 ok $raw_length, "Got raw content length: $raw_length";
+
+my $content_length = $page->content_length;
+is $content_length, $raw_length, "Page content-length matches";
+
+my $headers = $page->headers;
+
+is 'HASH', ref($headers), "Headers hashref defined";
+ok exists $headers->{'Content-Type'}, "Content-Type header exists in hashref";
+
+$content_length = $page->header('CoNtEnT-LenGTh');
+is $content_length, $raw_length, "Header content-length matches";
+
+my $content_type = $page->header('content-type');
+like $content_type, qr|^text/html\b|, "Header Content-Type matches";
+
 like $page->content_type, qr|^text/html\b|, "Page content type matches";
 
 my $forms = $page->forms;
