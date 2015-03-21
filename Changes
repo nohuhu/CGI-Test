@@ -1,3 +1,11 @@
+Fri Mar 20 21:50:04 PDT 2015    Alex Tokarev <tokarev@cpan.org>
+
+        Version 1.100
+
+        Response headers were never handled before; they are now.
+        Also refactored the old code that read responses
+        while I was at it.
+
 Mon Mar  2 20:21:30 PST 2015    Alex Tokarev <tokarev@cpan.org>
 
         Version 1.002
