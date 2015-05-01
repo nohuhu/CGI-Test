@@ -2,7 +2,8 @@ use strict;
 use warnings; 
 
 use Config;
-use Test::More tests => 16;
+use File::Temp ();
+use Test::More tests => 18;
 
 use CGI::Test;
 
@@ -52,18 +53,22 @@ cmp_ok $V{PATH_INFO}, 'eq', "/$PATH_INFO", "PATH_INFO";
 cmp_ok $V{QUERY_STRING}, 'eq', $QUERY, "QUERY_STRING";
 cmp_ok $V{REMOTE_USER}, 'eq', $USER, "REMOTE_USER";
 cmp_ok $V{HTTP_USER_AGENT}, 'eq', "CGI::Test", "HTTP_USER_AGENT";
+cmp_ok $V{TMPDIR}, 'eq', $ct->tmp_dir, "TMPDIR default";
 
 my $AGENT = "LWP::UserAgent";
 my $EXTRA = "is set";
 $page->delete;
 
+my $tmpdir = File::Temp->newdir();
+
 my $ct2 = CGI::Test->new(
 	-base_url	=> $BASE,
+    -tmp_dir    => $tmpdir->dirname,
 	-cgi_dir	=> "t/cgi",
 	-cgi_env	=> {
-		EXTRA_IMPORTANT_VARIABLE	=> $EXTRA,
-		HTTP_USER_AGENT				=> $AGENT,
-		SCRIPT_FILENAME				=> "foo",
+		EXTRA_IMPORTANT_VARIABLE => $EXTRA,
+		HTTP_USER_AGENT          => $AGENT,
+		SCRIPT_FILENAME          => "foo",
 	},
 );
 
@@ -73,6 +78,7 @@ parse_content(\%V, $page->raw_content_ref);
 cmp_ok $V{SCRIPT_NAME}, 'eq', "/cgi-bin/$SCRIPT", "SCRIPT_NAME";
 cmp_ok $V{HTTP_USER_AGENT}, 'eq', $AGENT, "HTTP_USER_AGENT";
 cmp_ok $V{EXTRA_IMPORTANT_VARIABLE}, 'eq', $EXTRA, "EXTRA_IMPORTANT_VARIABLE";
+cmp_ok $V{TMPDIR}, 'eq', $tmpdir->dirname, "TMPDIR custom";
 
 ok !exists $V{REMOTE_USER}, "REMOTE_USER not set";
 

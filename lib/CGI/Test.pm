@@ -648,6 +648,12 @@ sub _run_cgi
 
     $ENV{PERL5LIB} = join($path_sep, map {-e $_ ? abs_path($_) : $_} @INC);
 
+    # Also make sure that temp directory is available for the script,
+    # else older CGI.pm may choke and default to some not-quite-sane
+    # values that do not work in Windows
+
+    $ENV{TMPDIR} = $this->tmp_dir;
+
     #
     # Now run the script, changing the current directory to the location
     # of the script, as a web server would.
