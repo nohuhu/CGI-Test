@@ -1,3 +1,13 @@
+Thu Apr 30 22:23:51 PDT 2015    Alex Tokarev <tokarev@cpan.org>
+
+        Version 1.110
+
+        $ENV{TMPDIR} for CGI scripts is now forcibly set to
+        whatever temporary directory value was resolved when
+        creating a new CGI::Test instance. This is to work around
+        an issue with older CGI.pm in Windows when $ENV{TMP}
+        and $ENV{TEMP} are unavailable for some reason.
+
 Fri Mar 20 21:50:04 PDT 2015    Alex Tokarev <tokarev@cpan.org>
 
         Version 1.100
