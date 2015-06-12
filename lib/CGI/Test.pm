@@ -845,7 +845,7 @@ a GET request for, say:
 and it will do so I<internally>, without contacting C<foo.example.com>
 on port 70...
 
-=item C<-cgi_dir> => I<path to the cgi-bin directoru>
+=item C<-cgi_dir> => I<path to the cgi-bin directory>
 
 Defines the physical path corresponding to the C<cgi-bin> directory defined
 by the C<-base_url> parameter.
