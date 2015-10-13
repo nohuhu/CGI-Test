@@ -52,7 +52,7 @@ sub new
 
     my $uri = URI->new($ubase);
     croak "-base_url $ubase is not within the http scheme"
-        unless $uri->scheme eq 'http';
+        unless ( $uri->scheme eq 'http' || $uri->scheme eq 'https' );
 
     my ($server, $path) = $this->split_uri($uri);
     $this->{host_port} = $server;
