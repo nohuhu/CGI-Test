@@ -59,7 +59,7 @@ my %TEST_REQ = (
 WriteMakefile(
     NAME         => 'CGI::Test',
     ABSTRACT     => 'CGI regression test framework',
-    LICENSE      => 'perl',
+    LICENSE      => 'artistic_1',
 
     VERSION_FROM => 'lib/CGI/Test.pm',
     
