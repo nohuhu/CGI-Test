@@ -1,6 +1,6 @@
 #################################################################
 #  Copyright (c) 2001, Raphael Manfredi
-#  Copyright (c) 2011-2015, Alex Tokarev
+#  Copyright (c) 2011-2016, Alex Tokarev
 #
 #  You may redistribute only under the terms of the Artistic License,
 #  as specified in the README file that comes with the distribution.
